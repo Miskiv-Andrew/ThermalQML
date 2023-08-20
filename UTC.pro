@@ -1,10 +1,11 @@
-QT += quick
+QT += quick charts
 
 SOURCES += \
     main.cpp
 
-resources.files =   assest/qml/main.qml \
-                    assest/qml/modules/ColorTheme.qml
+resources.files +=      assest/qml/main.qml \
+                        assest/qml/modules/ColorTheme.qml
+                        assest/qml/modules/FontStyle.qml
 
 
 resources.prefix = /$${TARGET}
@@ -24,4 +25,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     assest/qml/main.qml \
-    assest/qml/modules/ColorTheme.qml
+    assest/qml/modules/ColorTheme.qml \
+    assest/qml/modules/FontStyle.qml \
+    assest/qml/modules/SceLeftMenuButton.qml \
+    assest/qml/modules/SceTopBarButton.qml

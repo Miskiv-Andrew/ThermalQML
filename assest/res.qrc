@@ -1956,5 +1956,25 @@
         <file>icons/zoom-out.svg</file>
         <file>qml/main.qml</file>
         <file>qml/modules/ColorTheme.qml</file>
+        <file>qml/modules/FontStyle.qml</file>
+        <file>Fonts/Poppins-BlackItalic.ttf</file>
+        <file>Fonts/Poppins-Bold.ttf</file>
+        <file>Fonts/Poppins-BoldItalic.ttf</file>
+        <file>Fonts/Poppins-ExtraBold.ttf</file>
+        <file>Fonts/Poppins-ExtraBoldItalic.ttf</file>
+        <file>Fonts/Poppins-ExtraLight.ttf</file>
+        <file>Fonts/Poppins-ExtraLightItalic.ttf</file>
+        <file>Fonts/Poppins-Italic.ttf</file>
+        <file>Fonts/Poppins-Light.ttf</file>
+        <file>Fonts/Poppins-LightItalic.ttf</file>
+        <file>Fonts/Poppins-Medium.ttf</file>
+        <file>Fonts/Poppins-MediumItalic.ttf</file>
+        <file>Fonts/Poppins-Regular.ttf</file>
+        <file>Fonts/Poppins-SemiBold.ttf</file>
+        <file>Fonts/Poppins-SemiBoldItalic.ttf</file>
+        <file>Fonts/Poppins-Thin.ttf</file>
+        <file>Fonts/Poppins-ThinItalic.ttf</file>
+        <file>qml/modules/SceTopBarButton.qml</file>
+        <file>qml/modules/SceLeftMenuButton.qml</file>
     </qresource>
 </RCC>
