@@ -1976,5 +1976,6 @@
         <file>Fonts/Poppins-ThinItalic.ttf</file>
         <file>qml/modules/SceTopBarButton.qml</file>
         <file>qml/modules/SceLeftMenuButton.qml</file>
+        <file>qml/modules/SceDeviceItem.qml</file>
     </qresource>
 </RCC>

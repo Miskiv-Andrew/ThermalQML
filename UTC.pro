@@ -27,5 +27,6 @@ DISTFILES += \
     assest/qml/main.qml \
     assest/qml/modules/ColorTheme.qml \
     assest/qml/modules/FontStyle.qml \
+    assest/qml/modules/SceDeviceItem.qml \
     assest/qml/modules/SceLeftMenuButton.qml \
     assest/qml/modules/SceTopBarButton.qml
