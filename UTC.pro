@@ -29,4 +29,6 @@ DISTFILES += \
     assest/qml/modules/FontStyle.qml \
     assest/qml/modules/SceDeviceItem.qml \
     assest/qml/modules/SceLeftMenuButton.qml \
-    assest/qml/modules/SceTopBarButton.qml
+    assest/qml/modules/SceTopBarButton.qml \
+    assest/qml/windows/WinCoeff.qml \
+    assest/qml/windows/WinSpectr.qml
