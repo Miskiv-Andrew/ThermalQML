@@ -278,179 +278,64 @@ Window {
                                 anchors.right: parent.right
                                 anchors.top: parent.top
                                 anchors.bottom: parent.bottom
-                                anchors.rightMargin: 0
-                                anchors.bottomMargin: 0
-                                anchors.topMargin: 0
+                                anchors.rightMargin: 10
+                                anchors.bottomMargin: 10
+                                anchors.topMargin: 10
                                 anchors.leftMargin: 10
 
+                                Column {
+                                    id: column
+                                    anchors.fill: parent
+                                    padding: 0
+                                    spacing: 0
 
-                                Rectangle {
-                                    id: rectangleChart
-                                    x: 10
-                                    y: 10
-                                    height: parent.height/2
-                                    color: "#fafafa"
-                                    radius: 10
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.top: parent.top
-                                    anchors.rightMargin: 10
-                                    anchors.leftMargin: 10
-                                    anchors.topMargin: 10
-                                    layer.enabled: true
-                                    layer.effect: DropShadow {
-                                        color: "#a0676767"
-                                        transparentBorder: true
-                                        horizontalOffset: 2
-                                        verticalOffset: 4
-                                        radius: 4
-                                    }
-
-                                    ChartView {
-                                        id: spectrumChart
-                                        anchors.fill: parent
-                                        backgroundColor : "#00000000"
-                                        margins.bottom: 0
-                                        margins.top: 0
-                                        margins.left: 0
-                                        margins.right: 0
-                                        antialiasing: true
-                                        theme: ChartView.ChartThemeQt
-                                        legend.visible: false
-
-//                                        MouseArea {
-//                                            anchors.fill: parent
-//                                            hoverEnabled  : true
-
-//                                            onClicked: {
-
-//                                                var p = Qt.point(mouse.x, mouse.y);
-//                                                var cp = spectrumChart.mapToValue(p, spectrumLine);
-//                                                console.log(cp.x + " " + cp.y)
-
-
-//                                                }
-//                                        }
-
-                                        MouseArea {
-                                            id: chartMouseArea
+                                    Item {
+                                        id: itemSpectr
+                                        width: parent.width
+                                        height: parent.height/2
+                                        Loader {
+                                            id: spectrLoader
                                             anchors.fill: parent
-                                            hoverEnabled: true
-
-                                            onClicked: {
-                                                var mousePoint = mapFromItem(chartMouseArea, mouse.x, mouse.y);
-                                                var xAxis = spectrumChart.axisX;
-                                                var yAxis = spectrumChart.axisY;
-                                                var xValue = xAxis.min + (xAxis.max - xAxis.min) * (mousePoint.x / spectrumChart.width);
-                                                var yValue = yAxis.min + (yAxis.max - yAxis.min) * (1 - mousePoint.y / spectrumChart.height);
-
-                                                var closestPoint = Qt.point(mouse.x, mouse.y); //internal.findClosestPoint(xValue, yValue);
-                                                if (closestPoint) {
-                                                    internal.showInfoRectangle(closestPoint.x, closestPoint.y);
-                                                } else {
-                                                    internal.hideInfoRectangle();
+                                            source: "qrc:/qml/windows/WinSpectr.qml"
+                                            anchors.bottomMargin: 10 // Указываем путь к вашей форме
+                                            onStatusChanged: {
+                                                if (spectrLoader.status === Loader.Error) {
+                                                    // Выводим ошибку, если форма не загружена
+                                                    console.error("Ошибка загрузки формы WinSpectr.qml: " + spectrLoader.errorString);
+                                                } else if (spectrLoader.status === Loader.Ready && spectrLoader.item === null) {
+                                                    // Выводим ошибку, если форма загружена, но item не установлен
+                                                    console.error("Ошибка: форма WinSpectr.qml загружена, но item не установлен.");
                                                 }
                                             }
                                         }
-
-
-                                        Rectangle {
-                                            id: infoRectangle
-                                            width: 100
-                                            height: 25
-                                            color: "#50505050"
-
-                                            visible: false
-
-                                            Text {
-                                                id: infoText
-                                                anchors.centerIn: parent
-                                            }
-                                        }
-
-                                        LineSeries {
-                                            id: spectrumLine
-                                            XYPoint { x: 0; y:50}
-                                            XYPoint { x: 2; y:40}
-                                            XYPoint { x: 3; y:40}
-                                            XYPoint { x: 5; y:30}
-                                            XYPoint { x: 6; y:30}
-                                            XYPoint { x: 8; y:20}
-                                            XYPoint { x: 9; y:20}
-
-                                        }
                                     }
 
-
-                                }
-
-
-                                Rectangle {
-                                    id: rectangleCoef
-                                    x: 10
-                                    height: parent.height/2
-                                    color: "#fafafa"
-                                    radius: 10
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.top: rectangleChart.bottom
-                                    anchors.bottom: parent.bottom
-                                    anchors.topMargin: 10
-                                    anchors.rightMargin: 10
-                                    anchors.leftMargin: 10
-                                    anchors.bottomMargin: 10
-                                    layer.enabled: true
-                                    layer.effect: DropShadow {
-                                        color: "#a0676767"
-                                        transparentBorder: true
-                                        horizontalOffset: 2
-                                        verticalOffset: 4
-                                        radius: 4
-
-                                    }
-
-                                    TableView {
-                                        anchors.fill: parent
-                                        alternatingRows: true
-                                        columnSpacing: 1
-                                        rowSpacing: 1
-                                        clip: true
-
-                                        model: TableModel {
-                                            TableModelColumn { display: "Name" }
-                                            TableModelColumn { display: "50°C" }
-                                            TableModelColumn { display: "40°C" }
-                                            TableModelColumn { display: "30°C" }
-                                            TableModelColumn { display: "20°C" }
-                                            TableModelColumn { display: "10°C" }
-                                            TableModelColumn { display: "0°C" }
-                                            TableModelColumn { display: "-10°C" }
-                                            TableModelColumn { display: "-20°C" }
-
-                                            // Define the data
-                                            rows: [
-                                                { Name: "Темп.",   "50°C": 10, "40°C": 15, "30°C": 20, "20°C": 25, "10°C": 30, "0°C": 35, "-10°C": 40, "-20°C": 45 },
-                                                { Name: "Код Uzm", "50°C": 8, "40°C": 12, "30°C": 16, "20°C": 20, "10°C": 24, "0°C": 28, "-10°C": 32, "-20°C": 36 },
-                                                { Name: "Шум",     "50°C": 5, "40°C": 10, "30°C": 15, "20°C": 20, "10°C": 25, "0°C": 30, "-10°C": 35, "-20°C": 40 },
-                                                { Name: "Сдвиг",   "50°C": 12, "40°C": 18, "30°C": 24, "20°C": 30, "10°C": 36, "0°C": 42, "-10°C": 48, "-20°C": 54 }
-                                            ]
-                                        }
-
-                                        delegate: Rectangle {
-                                            implicitWidth: 75
-                                            implicitHeight: 30
-                                            border.width: 1
-                                            radius: 5
-
-                                            Text {
-                                                text: display
-                                                font.family: "Poppins Medium"
-                                                anchors.centerIn: parent
-                                                font.styleName: "Poppins Light"
+                                    Item {
+                                        id: itemCoeff
+                                        width: parent.width
+                                        height: parent.height/2
+                                        Loader {
+                                            id: coeffLoader
+                                            anchors.left: parent.left
+                                            anchors.right: parent.right
+                                            anchors.top: parent.top
+                                            anchors.bottom: parent.bottom
+                                            source: "qrc:/qml/windows/WinCoeff.qml"
+                                            anchors.topMargin: 0 // Указываем путь к вашей форме
+                                            onStatusChanged: {
+                                                if (coeffLoader.status === Loader.Error) {
+                                                    // Выводим ошибку, если форма не загружена
+                                                    console.error("Ошибка загрузки формы WinCoeff.qml: " + coeffLoader.errorString);
+                                                } else if (coeffLoader.status === Loader.Ready && coeffLoader.item === null) {
+                                                    // Выводим ошибку, если форма загружена, но item не установлен
+                                                    console.error("Ошибка: форма WinCoeff.qml загружена, но item не установлен.");
+                                                }
                                             }
                                         }
                                     }
                                 }
+
+
 
                             }
 
@@ -743,6 +628,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.9}D{i:32}
+    D{i:0;formeditorZoom:0.75}
 }
 ##^##*/
