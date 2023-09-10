@@ -1,0 +1,341 @@
+//---Item Loading by loader
+
+Item {
+	id: itemCoeff
+	width: parent.width
+	height: parent.height/2
+	Loader {
+		id: coeffLoader
+		anchors.left: parent.left
+		anchors.right: parent.right
+		anchors.top: parent.top
+		anchors.bottom: parent.bottom
+		source: "qrc:/qml/windows/WinCoeff.qml"
+		anchors.topMargin: 0 // Указываем путь к вашей форме
+		onStatusChanged: {
+			if (coeffLoader.status === Loader.Error) {
+				// Выводим ошибку, если форма не загружена
+				console.error("Ошибка загрузки формы WinCoeff.qml: " + coeffLoader.errorString);
+			} else if (coeffLoader.status === Loader.Ready && coeffLoader.item === null) {
+				// Выводим ошибку, если форма загружена, но item не установлен
+				console.error("Ошибка: форма WinCoeff.qml загружена, но item не установлен.");
+			}
+		}
+	}
+}
+
+
+//---TopBar
+
+
+            Rectangle{
+                id: topBarFrame
+                x: 298
+                height: 30
+                color: "#dbdcdb"
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+
+
+                DragHandler{
+                    onActiveChanged: if(active){
+                                         app.startSystemMove()
+                                         internal.ifMaximizedRestore()
+                                     }
+                }
+
+                Row {
+                    id: rowTopBar
+                    anchors.fill: parent
+                    rightPadding: 5
+                    spacing: 5
+                    layoutDirection: Qt.RightToLeft
+
+                    SceTopBarButton {
+                        id: buttonClose
+                        anchors.verticalCenter: parent.verticalCenter
+                        btnIcon: "qrc:/icons/x-lg.svg"
+                        onClicked: {
+                            app.close()
+                        }
+
+                    }
+                    SceTopBarButton {
+                        id: buttonMaximize
+                        anchors.verticalCenter: parent.verticalCenter
+                        btnIcon: "qrc:/icons/window-fullscreen.svg"
+                        onClicked: {
+                            internal.maximizeRestore()
+                        }
+                    }
+
+                    SceTopBarButton {
+                        id: buttonMinimize
+                        anchors.verticalCenter: parent.verticalCenter
+                        btnIcon: "qrc:/icons/dash-lg.svg"
+                        onClicked: {
+                            app.showMinimized()
+                            internal.restoreMargins()
+                        }
+                    }
+
+                }
+
+            }
+
+
+//---Resize bars
+
+    MouseArea {
+        id: leftResize
+        width: 5
+        anchors.left: background.left
+        anchors.top: background.top
+        anchors.bottom: background.bottom
+        anchors.leftMargin: -5
+        anchors.topMargin: 10
+        anchors.bottomMargin: 10
+        cursorShape: Qt.SizeHorCursor
+        DragHandler{
+            target: null
+            onActiveChanged: if (active) { app.startSystemResize(Qt.LeftEdge) }
+        }
+    }
+
+    MouseArea {
+        id: rightResize
+        width: 5
+        anchors.right: background.right
+        anchors.top: background.top
+        anchors.bottom: background.bottom
+        anchors.rightMargin: -5
+        anchors.topMargin: 10
+        anchors.bottomMargin: 10
+        cursorShape: Qt.SizeHorCursor
+        DragHandler{
+            target: null
+            onActiveChanged: if (active) { app.startSystemResize(Qt.RightEdge) }
+        }
+    }
+
+    MouseArea {
+        id: topResize
+        height: 5
+        anchors.left: background.left
+        anchors.right: background.right
+        anchors.top: background.top
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+        anchors.topMargin: -5
+        cursorShape: Qt.SizeVerCursor
+        DragHandler{
+            target: null
+            onActiveChanged: if (active) { app.startSystemResize(Qt.TopEdge) }
+        }
+    }
+
+    MouseArea {
+        id: bottomResize
+        height: 5
+        anchors.left: background.left
+        anchors.right: background.right
+        anchors.bottom: background.bottom
+        anchors.bottomMargin: -5
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+        cursorShape: Qt.SizeVerCursor
+        DragHandler{
+            target: null
+            onActiveChanged: if (active) { app.startSystemResize(Qt.BottomEdge) }
+        }
+    }
+
+    MouseArea {
+        id: topLeftResize
+        width: 10
+        height: 10
+        anchors.left: background.left
+        anchors.top: background.top
+        anchors.leftMargin: -10
+        anchors.topMargin: -10
+        cursorShape: Qt.SizeFDiagCursor
+        DragHandler{
+            target: null
+            onActiveChanged: if (active) { app.startSystemResize(Qt.LeftEdge | Qt.TopEdge) }
+        }
+    }
+
+    MouseArea {
+        id: topRightResize
+        width: 10
+        height: 10
+        anchors.right: background.right
+        anchors.top: background.top
+        anchors.rightMargin: -10
+        anchors.topMargin: -10
+        cursorShape: Qt.SizeBDiagCursor
+        DragHandler{
+            target: null
+            onActiveChanged: if (active) { app.startSystemResize(Qt.RightEdge | Qt.TopEdge) }
+        }
+    }
+
+    MouseArea {
+        id: bottomLeftResize
+        width: 10
+        height: 10
+        anchors.left: background.left
+        anchors.bottom: background.bottom
+        anchors.leftMargin: -10
+        anchors.bottomMargin: -10
+        cursorShape: Qt.SizeBDiagCursor
+        DragHandler{
+            target: null
+            onActiveChanged: if (active) { app.startSystemResize(Qt.LeftEdge | Qt.BottomEdge) }
+        }
+    }
+
+    MouseArea {
+        id: bottomRightResize
+        x: 1270
+        y: 710
+        width: 10
+        height: 10
+        anchors.right: background.right
+        anchors.bottom: background.bottom
+        rotation: 0
+        anchors.bottomMargin: 0
+        anchors.rightMargin: 0
+        cursorShape: Qt.SizeFDiagCursor
+        DragHandler{
+            target: null
+            onActiveChanged: if (active) { app.startSystemResize(Qt.RightEdge | Qt.BottomEdge) }
+        }
+    }
+	
+	
+//---Function for window controllers
+
+    // PROPERTIES
+    property int windowStatus: 0
+    property int windowMargin: 10
+
+    // INTERNAL FUNCTIONS
+    QtObject{
+        id: internal
+
+        // Close Left Top Menu Popup
+        function closeLeftPopup(){
+            topTitleMenusExited.running = true
+            console.log("Closed Popup")
+            leftPopupMenu.activeMenu = true
+            leftPopupMenu.rotateNormal()
+            topTitleMenus.visible = false
+        }
+
+        // Show Overlay
+        function showOverlay(){
+            colorOverlayApp.visible = true
+            showOverlayAnimation.running = true
+        }
+        function closeOverlay(){
+            hideOverlayAnimation.running = true
+        }
+
+        // Maximize Restore
+        function maximizeRestore(){
+            if(windowStatus == 0){
+                app.showMaximized()
+                windowStatus = 1
+                windowMargin = 0
+                buttonMaximize.btnIcon = "qrc:/icons/window-stack.svg"
+            }
+            else{
+                app.showNormal()
+                windowStatus = 0
+                windowMargin = 10
+                buttonMaximize.btnIcon = "qrc:/icons/window-fullscreen.svg"
+            }
+        }
+
+        // If Maximized Restore
+        function ifMaximizedRestore(){
+            if(windowStatus == 1){
+                app.showNormal()
+                windowStatus = 0
+                windowMargin = 10
+                buttonMaximize.btnIcon = "qrc:/icons/window-fullscreen.svg"
+            }
+        }
+
+        // Restore Margins
+        function restoreMargins(){
+            windowStatus = 0
+            windowMargin = 10
+            buttonMaximize.btnIcon = "qrc:/icons/window-fullscreen.svg"
+        }
+
+        //---SPECTRUM CHAR
+
+        function findClosestPoint(targetX, targetY) {
+            var closestPoint;
+            var minDistance = Number.MAX_VALUE;
+
+            for (var i = 0; i < spectrumLine.count; i++) {
+                var point = spectrumLine.at(i);
+                var distance = Math.abs(point.x - targetX);
+                if (distance < minDistance) {
+                    closestPoint = point;
+                    minDistance = distance;
+                }
+            }
+
+            return closestPoint;
+        }
+
+        function showInfoRectangle(x, y) {
+            infoRectangle.visible = true;
+            infoRectangle.x = x - infoRectangle.width / 2;
+            infoRectangle.y = y - infoRectangle.height - 10; // Adjust position
+            infoText.text = "X: " + x.toFixed(2) + " Y: " + y.toFixed(2);
+        }
+
+        function hideInfoRectangle() {
+            infoRectangle.visible = false;
+        }
+    }
+	
+	
+//--- ChartView glow gradient
+
+
+Glow {
+	id:glow
+	anchors.fill: spectrumChart
+	radius: 0
+	samples: 1000
+	color: "#100000ff"
+	source: spectrumChart
+
+}
+
+LinearGradient {
+	id:gradient
+	// 200 is length of gamut
+	start:Qt.point(0,0)
+	end:Qt.point(1,1)
+	gradient: Gradient {
+		GradientStop {
+			position: 1;
+			color: "#ff0000ff"
+		}
+
+		GradientStop {
+			position: 0;
+			color: "#000000ff"
+		}
+	}
+	anchors.fill: glow
+	source: glow
+}

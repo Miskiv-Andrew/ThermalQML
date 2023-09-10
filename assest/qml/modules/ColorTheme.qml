@@ -1,5 +1,5 @@
 import QtQuick
-pragma Singleton
+
 
 //--text: #07130f;
 //--background: #daf1ea;

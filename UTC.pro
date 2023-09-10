@@ -30,5 +30,8 @@ DISTFILES += \
     assest/qml/modules/SceDeviceItem.qml \
     assest/qml/modules/SceLeftMenuButton.qml \
     assest/qml/modules/SceTopBarButton.qml \
+    assest/qml/scripts/SpectrumControlScript.qml \
+    assest/qml/scripts/WindowControlScript.qml \
     assest/qml/windows/WinCoeff.qml \
+    assest/qml/windows/WinDevlist.qml \
     assest/qml/windows/WinSpectr.qml

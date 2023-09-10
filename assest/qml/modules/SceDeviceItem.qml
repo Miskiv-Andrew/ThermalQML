@@ -4,6 +4,7 @@ import QtQuick.Controls
 Item {
     width: parent.width
     height: 50
+
     Row {
         id: row
         anchors.fill: parent

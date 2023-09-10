@@ -1979,5 +1979,9 @@
         <file>qml/modules/SceDeviceItem.qml</file>
         <file>qml/windows/WinCoeff.qml</file>
         <file>qml/windows/WinSpectr.qml</file>
+        <file>qml/scripts/SpectrumControlScript.qml</file>
+        <file>qml/scripts/WindowControlScript.qml</file>
+        <file>qml/windows/WinDevlist.qml</file>
+        <file>qml/windows/Test.qml</file>
     </qresource>
 </RCC>

@@ -9,9 +9,10 @@ Item {
     width: 700
     height: 350
 
-
     Rectangle {
         id: rectangleChart
+        x: 10
+        y: 10
         color: "#fafafa"
         radius: 10
         anchors.fill: parent
@@ -26,182 +27,189 @@ Item {
             radius: 4
         }
 
+        Rectangle{
+            id: content
+            x: 10
+            y: 10
+            anchors.fill: parent
+            anchors.rightMargin: 5
+            anchors.leftMargin: 5
+            anchors.bottomMargin: 5
+            anchors.topMargin: 5
+
+            Rectangle {
+                id: rectangleSpectr
+                color: "#ffffff"
+                anchors.left: parent.left
+                anchors.right: rectangleData.left
+                anchors.top: rectangleTop.bottom
+                anchors.bottom: parent.bottom
+                anchors.rightMargin: 0
+                anchors.topMargin: 0
 
 
-        Rectangle {
-            id: rectangleSpectr
-            width: parent.width*0.6
-            color: "#d5d5d5"
-            anchors.left: parent.left
-            anchors.top: rectangleTop.bottom
-            anchors.bottom: parent.bottom
-            anchors.leftMargin: 0
-            anchors.bottomMargin: 0
-            anchors.topMargin: 0
 
-            ChartView {
-                id: spectrumChart
-                anchors.fill: parent
-                backgroundColor : "#00000000"
-                margins.bottom: 0
-                margins.top: 0
-                margins.left: 0
-                margins.right: 0
-                antialiasing: true
-                theme: ChartView.ChartThemeQt
-                legend.visible: false
-
-                //        MouseArea {
-                //            anchors.fill: parent
-                //            hoverEnabled  : true
-
-                //            onClicked: {
-
-                //                var p = Qt.point(mouse.x, mouse.y);
-                //                var cp = spectrumChart.mapToValue(p, spectrumLine);
-                //                console.log(cp.x + " " + cp.y)
-
-
-                //                }
-                //        }
-
-                MouseArea {
-                    id: chartMouseArea
+                ChartView {
+                    id: spectrumChart
                     anchors.fill: parent
-                    hoverEnabled: true
+                    backgroundColor : "#00000000"
+                    margins.bottom: 0
+                    margins.top: 0
+                    margins.left: 0
+                    margins.right: 0
+                    antialiasing: true
+                    legend.visible: false
 
-                    onClicked: {
-                        var mousePoint = mapFromItem(chartMouseArea, mouse.x, mouse.y);
-                        var xAxis = spectrumChart.axisX;
-                        var yAxis = spectrumChart.axisY;
-                        var xValue = xAxis.min + (xAxis.max - xAxis.min) * (mousePoint.x / spectrumChart.width);
-                        var yValue = yAxis.min + (yAxis.max - yAxis.min) * (1 - mousePoint.y / spectrumChart.height);
 
-                        var closestPoint = Qt.point(mouse.x, mouse.y); //internal.findClosestPoint(xValue, yValue);
-                        if (closestPoint) {
-                            internal.showInfoRectangle(closestPoint.x, closestPoint.y);
-                        } else {
-                            internal.hideInfoRectangle();
+                    ValueAxis {
+                        id: valueAxis
+                        tickCount: 10
+                        labelFormat: "%.0f"
+                    }
+
+                    AreaSeries {
+                        name: "Spectr"
+                        axisX: valueAxis
+                        color: "#700000ff"
+                        upperSeries: LineSeries {
+                            XYPoint { x: 1; y: 1 }
+                            XYPoint { x: 5; y: 10 }
+                            XYPoint { x: 50; y: 100 }
+                            XYPoint { x: 100; y: 50 }
+                            XYPoint { x: 200; y: 10 }
+                            XYPoint { x: 400; y: 400 }
+                            XYPoint { x: 600; y: 600}
+                            XYPoint { x: 800; y: 400 }
+                            XYPoint { x: 1000; y: 50 }
+
                         }
                     }
-                }
 
-
-                Rectangle {
-                    id: infoRectangle
-                    width: 100
-                    height: 25
-                    color: "#50505050"
-
-                    visible: false
-
-                    Text {
-                        id: infoText
-                        anchors.centerIn: parent
+                    MouseArea{
+                        anchors.fill: parent
+                        onDoubleClicked: spectrumChart.zoomReset();
                     }
-                }
 
-                LineSeries {
-                    id: spectrumLine
-                    XYPoint { x: 0; y:383}
-                    XYPoint { x: 100; y:886}
-                    XYPoint { x: 200; y:777}
-                    XYPoint { x: 350; y:915}
+                    PinchArea{
+                        id: pa
+                        anchors.fill: parent
+                        onPinchUpdated: {
+                            spectrumChart.zoomReset();
+                            var center_x = pinch.center.x
+                            var center_y = pinch.center.y
+                            var width_zoom = height/pinch.scale;
+                            var height_zoom = width/pinch.scale;
+                            var r = Qt.rect(center_x-width_zoom/2, center_y - height_zoom/2, width_zoom, height_zoom)
+                            spectrumChart.zoomIn(r)
+                        }
+
+                    }
+
+
                 }
             }
-        }
 
-        Rectangle {
-            id: rectangleData
-            width: parent.width*0.4
-            color: "#ffffff"
-            anchors.right: parent.right
-            anchors.top: rectangleTop.bottom
-            anchors.bottom: parent.bottom
-            anchors.rightMargin: 0
-            anchors.bottomMargin: 0
-            anchors.topMargin: 0
-
-            Column {
-                id: column
-                anchors.fill: parent
+            Rectangle {
+                id: rectangleData
+                x: 410
+                y: 40
+                width: 100
+                color: "#ffffff"
+                anchors.right: parent.right
+                anchors.top: rectangleTop.bottom
+                anchors.bottom: parent.bottom
                 anchors.rightMargin: 0
                 anchors.bottomMargin: 0
-                spacing: 20
+                anchors.topMargin: 0
 
-                Text {
-                    id: textAccTime
-                    text: qsTr("Час накопичення: - ")
-                    font.pixelSize: 12
-                }
+                Column {
+                    id: column
+                    anchors.fill: parent
+                    clip: true
+                    anchors.leftMargin: 0
+                    anchors.topMargin: 0
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    spacing: 20
 
-                Text {
-                    id: textIntegCPS
-                    text: qsTr("Інтенсивність (інтегрована), cps: - ")
-                    font.pixelSize: 12
-                }
-                Text {
-                    id: textSpectrCPS
-                    text: qsTr("Інтенсивність (спектр), cps: - ")
-                    font.pixelSize: 12
-                }
-                Text {
-                    id: textCurrentPED
-                    text: qsTr("ПЕД, мкЗв/год: - ")
-                    font.pixelSize: 12
-                }
-                Text {
-                    id: textTemperature
-                    text: qsTr("Температура, °C: - ")
-                    font.pixelSize: 12
+                    Text {
+                        id: textAccTime
+                        text: qsTr("Час накопичення: - ")
+                        font.pixelSize: 12
+                    }
+
+                    Text {
+                        id: textIntegCPS
+                        text: qsTr("Інтенсивність (інтегрована), cps: - ")
+                        font.pixelSize: 12
+                    }
+                    Text {
+                        id: textSpectrCPS
+                        text: qsTr("Інтенсивність (спектр), cps: - ")
+                        font.pixelSize: 12
+                    }
+                    Text {
+                        id: textCurrentPED
+                        text: qsTr("ПЕД, мкЗв/год: - ")
+                        font.pixelSize: 12
+                    }
+                    Text {
+                        id: textTemperature
+                        text: qsTr("Температура, °C: - ")
+                        font.pixelSize: 12
+                    }
                 }
             }
-        }
 
-        Rectangle {
-            id: rectangleTop
-            height: 50
-            color: "#eeeeee"
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.rightMargin: 0
-            anchors.leftMargin: 0
-            anchors.topMargin: 0
-
-            Switch {
-                id: switchStartStopSpectr
-                text: qsTr("Почати накопичення")
+            Rectangle {
+                id: rectangleTop
+                height: 50
+                color: "#f0f0f0"
+                radius: 10
                 anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: 10
-                anchors.bottomMargin: 10
-                anchors.topMargin: 10
-            }
-
-            Switch {
-                id: switchLogarifmSpect
-                text: qsTr("Логарифмічна шкала")
-                anchors.left: switchStartStopSpectr.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: 10
-                anchors.bottomMargin: 10
-                anchors.topMargin: 10
-            }
-
-            DelayButton {
-                id: delayButtonClearSpectr
-                text: qsTr("Очистити")
                 anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.rightMargin: 10
-                anchors.bottomMargin: 10
-                anchors.topMargin: 10
+                anchors.rightMargin: 0
+                anchors.leftMargin: 0
+                anchors.topMargin: 0
+
+                Switch {
+                    id: switchStartStopSpectr
+                    text: qsTr("Почати накопичення")
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    font.pointSize: 12
+                    font.family: "Arial"
+                    anchors.leftMargin: 10
+                }
+
+                Switch {
+                    id: switchLogarifmSpect
+                    text: qsTr("Логарифмічна шкала")
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: switchStartStopSpectr.right
+                    font.pointSize: 12
+                    font.family: "Arial"
+                    anchors.leftMargin: 10
+                }
+
+                Button {
+                    id: delayButtonClearSpectr
+                    width: 100
+                    height: 30
+                    text: qsTr("Очистити")
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    font.pointSize: 12
+                    layer.mipmap: false
+                    font.bold: false
+                    font.family: "Arial"
+                    anchors.rightMargin: 10
+                }
             }
+
         }
     }
+
 
 }
