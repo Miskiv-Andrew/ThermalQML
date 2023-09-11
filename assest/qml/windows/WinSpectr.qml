@@ -6,8 +6,8 @@ import QtCharts 6.3
 
 Item {
     visible: true
-    width: 700
-    height: 350
+    width: 1200
+    height: 500
 
     Rectangle {
         id: rectangleChart
@@ -41,10 +41,9 @@ Item {
                 id: rectangleSpectr
                 color: "#ffffff"
                 anchors.left: parent.left
-                anchors.right: rectangleData.left
+                anchors.right: parent.right
                 anchors.top: rectangleTop.bottom
                 anchors.bottom: parent.bottom
-                anchors.rightMargin: 0
                 anchors.topMargin: 0
 
 
@@ -62,14 +61,19 @@ Item {
 
 
                     ValueAxis {
-                        id: valueAxis
-                        tickCount: 10
+                        id: valueAxisX
+                        labelFormat: "%.0f"
+                    }
+
+                    ValueAxis {
+                        id: valueAxisY
                         labelFormat: "%.0f"
                     }
 
                     AreaSeries {
                         name: "Spectr"
-                        axisX: valueAxis
+                        axisX: valueAxisX
+                        axisY: valueAxisY
                         color: "#700000ff"
                         upperSeries: LineSeries {
                             XYPoint { x: 1; y: 1 }
@@ -85,79 +89,153 @@ Item {
                         }
                     }
 
-                    MouseArea{
+                    TextEdit {
+                        id: textEditSpectrumInfo
+//                        text: "Час накопичення: 000 сек \n" +
+//                              "Інтенсивність (інтегрована), cps: -\n" +
+//                              "Інтенсивність (спектр), cps: -\n" +
+//                              "ПЕД, мкЗв/год: -\n" +
+//                              "Температура, °C: -\n"
+                        textFormat: Text.RichText
+                        text: '<p> . <img src="qrc:/icons/clock.svg" width="12" height="12">  0000, сек  </p>' +
+                           '<p> . <img src="qrc:/icons/asterisk.svg" width="12" height="12">  0000 (0000), cps  </p>' +
+                        '<p> . <img src="qrc:/icons/radioactive.svg" width="12" height="12">  00.00, мкЗв/год  </p>' +
+                   '<p> . <img src="qrc:/icons/thermometer-snow.svg" width="12" height="12">  00.00, °C  </p>'
                         anchors.fill: parent
-                        onDoubleClicked: spectrumChart.zoomReset();
+                        font.pixelSize: 14
+                        horizontalAlignment: Text.AlignRight
+                        anchors.rightMargin: 25
+                        anchors.leftMargin: 25
+                        anchors.bottomMargin: 25
+                        anchors.topMargin: 25
                     }
 
-                    PinchArea{
-                        id: pa
+                    Rectangle{
+                        id: zoomAreaRec
+                        color: "#00000000"
+                        border.color: "#50ff0000"
+                        border.width: 2
+                        radius: 10
+                        clip: true
+                        visible: false
+                    }
+
+                    MouseArea {
+                        id: zoomMouseArea
                         anchors.fill: parent
-                        onPinchUpdated: {
-                            spectrumChart.zoomReset();
-                            var center_x = pinch.center.x
-                            var center_y = pinch.center.y
-                            var width_zoom = height/pinch.scale;
-                            var height_zoom = width/pinch.scale;
-                            var r = Qt.rect(center_x-width_zoom/2, center_y - height_zoom/2, width_zoom, height_zoom)
-                            spectrumChart.zoomIn(r)
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                        //zoom chart
+                        property real startX
+                        property real startY
+                        property real endX
+                        property real endY
+
+                        //drag chart
+                        property bool isMove
+                        property bool isZoom
+                        property point previous: Qt.point(mouseX, mouseY)
+                        property point scrollPoint
+                        property double scale: -1.0
+                        function reset(){
+                            scrollPoint = Qt.point(0,0);
                         }
 
+                        onReleased: (mouse)=> {
+                            if(isZoom == true){
+                                endX = mapToItem(spectrumChart, mouse.x, mouse.y).x;
+                                endY = mapToItem(spectrumChart, mouse.x, mouse.y).y;
+                                zoomChart();
+                                updateRectangle(0, 0, 0, 0, false);
+                                isZoom = false;
+                                console.log("onReleased Zoom")
+                            }
+                            else if(isMove == true){
+                                isMove = false
+                                console.log("onReleased Move")
+                            }
+                            //console.log("Released - " + "EndX: " + endX + "; EndY: " + endY + "\n");
+                        }
+
+                        onPressed: (mouse)=> {
+
+                            if(mouse.button == Qt.LeftButton){
+                                startX = mapToItem(spectrumChart, mouse.x, mouse.y).x;
+                                startY = mapToItem(spectrumChart, mouse.x, mouse.y).y;
+                                isZoom = true
+                                console.log("onPressed Qt.LeftButton")
+                            }
+                            else if(mouse.button == Qt.RightButton){
+                                previous = Qt.point(mouse.x, mouse.y);
+                                isMove = true
+                                console.log("onPressed Qt.RightButton")
+                            }
+
+                            //console.log("Pressed - " + "StartX: " + startX + "; StartY: " + startY + "\n");
+                        }
+
+                        onPositionChanged: (mouse)=> {
+                            if (isZoom == true){
+
+                                endX = mapToItem(spectrumChart, mouse.x, mouse.y).x;
+                                endY = mapToItem(spectrumChart, mouse.x, mouse.y).y;
+                                updateRectangle(startX, startY, endX - startX, endY - startY, true);
+                                console.log("onPositionChanged Qt.LeftButton");
+                            }
+
+                            else if(isMove == true){
+
+                                if(spectrumChart.isZoomed()) {
+
+                                    scrollPoint.x = (previous.x - mouse.x)*scale;
+                                    scrollPoint.y = (previous.y - mouse.y)*scale;
+
+                                    if(scrollPoint.y > 0)
+                                    {
+                                        spectrumChart.scrollUp(scrollPoint.y);
+                                        spectrumChart.scrollDown(0);
+                                    }
+                                    else{
+                                        spectrumChart.scrollDown(-scrollPoint.y);
+                                        spectrumChart.scrollUp(0);
+                                    }
+                                    if(scrollPoint.x > 0)
+                                    {
+                                        spectrumChart.scrollLeft(scrollPoint.x);
+                                        spectrumChart.scrollRight(0);
+                                    }
+                                    else{
+                                        spectrumChart.scrollLeft(0);
+                                        spectrumChart.scrollRight(-scrollPoint.x);
+                                    }
+
+                                    console.log("onPositionChanged Qt.RightButton");
+                                    previous = Qt.point(mouse.x, mouse.y);
+                                }
+                            }
+                        }
+
+                        function zoomChart() {
+                            if (startX < endX) {
+                                var r = Qt.rect(startX, startY, endX - startX, endY - startY);
+                                spectrumChart.zoomIn(r);
+                            }
+                            if (startX > endX) {
+                                spectrumChart.zoomReset();
+                            }
+
+                        }
+
+                        function updateRectangle(x, y, w, h, draw) {
+                            zoomAreaRec.visible = draw
+                            zoomAreaRec.x = x
+                            zoomAreaRec.y = y
+                            zoomAreaRec.width = w
+                            zoomAreaRec.height = h
+                        }
                     }
 
 
-                }
-            }
-
-            Rectangle {
-                id: rectangleData
-                x: 410
-                y: 40
-                width: 100
-                color: "#ffffff"
-                anchors.right: parent.right
-                anchors.top: rectangleTop.bottom
-                anchors.bottom: parent.bottom
-                anchors.rightMargin: 0
-                anchors.bottomMargin: 0
-                anchors.topMargin: 0
-
-                Column {
-                    id: column
-                    anchors.fill: parent
-                    clip: true
-                    anchors.leftMargin: 0
-                    anchors.topMargin: 0
-                    anchors.rightMargin: 0
-                    anchors.bottomMargin: 0
-                    spacing: 20
-
-                    Text {
-                        id: textAccTime
-                        text: qsTr("Час накопичення: - ")
-                        font.pixelSize: 12
-                    }
-
-                    Text {
-                        id: textIntegCPS
-                        text: qsTr("Інтенсивність (інтегрована), cps: - ")
-                        font.pixelSize: 12
-                    }
-                    Text {
-                        id: textSpectrCPS
-                        text: qsTr("Інтенсивність (спектр), cps: - ")
-                        font.pixelSize: 12
-                    }
-                    Text {
-                        id: textCurrentPED
-                        text: qsTr("ПЕД, мкЗв/год: - ")
-                        font.pixelSize: 12
-                    }
-                    Text {
-                        id: textTemperature
-                        text: qsTr("Температура, °C: - ")
-                        font.pixelSize: 12
-                    }
                 }
             }
 

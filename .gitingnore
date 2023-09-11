@@ -58,3 +58,5 @@ compile_commands.json
 
 assets/icons
 *.svg
+
+*.pro.user
