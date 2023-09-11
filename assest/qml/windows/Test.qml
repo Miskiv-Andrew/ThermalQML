@@ -1,8 +1,8 @@
-import QtQuick 2.7
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.0
-import QtCharts 2.1
-
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import Qt5Compat.GraphicalEffects
+import Qt.labs.qmlmodels 1.0
+import QtCharts 6.3
 
 Item {
     visible: true
@@ -41,14 +41,19 @@ Item {
 
 
                 ValueAxis {
-                    id: valueAxis
-                    tickCount: 10
+                    id: valueAxisX
+                    labelFormat: "%.0f"
+                }
+
+                ValueAxis {
+                    id: valueAxisY
                     labelFormat: "%.0f"
                 }
 
                 AreaSeries {
                     name: "Spectr"
-                    axisX: valueAxis
+                    axisX: valueAxisX
+                    axisY: valueAxisY
                     color: "#700000ff"
                     upperSeries: LineSeries {
                         XYPoint { x: 1; y: 1 }
@@ -77,7 +82,7 @@ Item {
                 MouseArea {
                     id: zoomMouseArea
                     anchors.fill: parent
-                    acceptedButtons: Qt.LeftButton
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
 
                     //zoom chart
                     property real startX
@@ -86,42 +91,86 @@ Item {
                     property real endY
 
                     //drag chart
-                    property real lastMouseX: 0
-                    property real lastMouseY: 0
-                    property real chartOffsetX: 0
-                    property real chartOffsetY: 0
-
-                    onReleased: {
-                        endX = mapToItem(spectrumChart, mouse.x, mouse.y).x;
-                        endY = mapToItem(spectrumChart, mouse.x, mouse.y).y;
-                        console.log("Released - " + "EndX: " + endX + "; EndY: " + endY + "\n");
-                        zoomChart();
-                        updateRectangle(0, 0, 0, 0, false);
+                    property bool isMove
+                    property bool isZoom
+                    property point previous: Qt.point(mouseX, mouseY)
+                    property point scrollPoint
+                    property double scale: -1.0
+                    function reset(){
+                        scrollPoint = Qt.point(0,0);
                     }
 
-                    onPressed: {
-                        startX = mapToItem(spectrumChart, mouse.x, mouse.y).x;
-                        startY = mapToItem(spectrumChart, mouse.x, mouse.y).y;
-                        lastMouseX = mouse.x
-                        lastMouseY = mouse.y
-                        console.log("Pressed - " + "StartX: " + startX + "; StartY: " + startY + "\n");
-                    }
-
-                    onPositionChanged: {
-                        if (mouse.button === Qt.RightButton) {
-                            var deltaX = mouse.x - lastMouseX
-                            var deltaY = mouse.y - lastMouseY
-                            chartOffsetX += deltaX
-                            chartOffsetY += deltaY
-                            spectrumChart.position.x = chartOffsetX
-                            spectrumChart.position.y = chartOffsetY
-                            lastMouseX = mouse.x
-                            lastMouseY = mouse.y
+                    onReleased: (mouse)=> {
+                        if(isZoom == true){
+                            endX = mapToItem(spectrumChart, mouse.x, mouse.y).x;
+                            endY = mapToItem(spectrumChart, mouse.x, mouse.y).y;
+                            zoomChart();
+                            updateRectangle(0, 0, 0, 0, false);
+                            isZoom = false;
+                            console.log("onReleased Zoom")
                         }
-                        else{
+                        if(isMove == true){
+                            isMove = false
+                            console.log("onReleased Move")
+                        }
+                        //console.log("Released - " + "EndX: " + endX + "; EndY: " + endY + "\n");
+                    }
+
+                    onPressed: (mouse)=> {
+
+                        if(mouse.button == Qt.LeftButton){
+                            startX = mapToItem(spectrumChart, mouse.x, mouse.y).x;
+                            startY = mapToItem(spectrumChart, mouse.x, mouse.y).y;
+                            isZoom = true
+                            console.log("onPressed Qt.LeftButton")
+                        }
+                        else if(mouse.button == Qt.RightButton){
+                            previous = Qt.point(mouse.x, mouse.y);
+                            isMove = true
+                            console.log("onPressed Qt.RightButton")
+                        }
+
+                        //console.log("Pressed - " + "StartX: " + startX + "; StartY: " + startY + "\n");
+                    }
+
+                    onPositionChanged: (mouse)=> {
+                        if (isZoom == true){
+
                             endX = mapToItem(spectrumChart, mouse.x, mouse.y).x;
                             endY = mapToItem(spectrumChart, mouse.x, mouse.y).y;
                             updateRectangle(startX, startY, endX - startX, endY - startY, true);
+                            console.log("onPositionChanged Qt.LeftButton");
+                        }
+
+                        else if(isMove == true){
+
+                            if(spectrumChart.isZoomed()) {
+
+                                scrollPoint.x = (previous.x - mouse.x)*scale;
+                                scrollPoint.y = (previous.y - mouse.y)*scale;
+
+                                if(scrollPoint.y > 0)
+                                {
+                                    spectrumChart.scrollUp(scrollPoint.y);
+                                    spectrumChart.scrollDown(0);
+                                }
+                                else{
+                                    spectrumChart.scrollDown(-scrollPoint.y);
+                                    spectrumChart.scrollUp(0);
+                                }
+                                if(scrollPoint.x > 0)
+                                {
+                                    spectrumChart.scrollLeft(scrollPoint.x);
+                                    spectrumChart.scrollRight(0);
+                                }
+                                else{
+                                    spectrumChart.scrollLeft(0);
+                                    spectrumChart.scrollRight(-scrollPoint.x);
+                                }
+
+                                console.log("onPositionChanged Qt.RightButton");
+                                previous = Qt.point(mouse.x, mouse.y);
+                            }
                         }
                     }
 
@@ -137,15 +186,11 @@ Item {
                     }
 
                     function updateRectangle(x, y, w, h, draw) {
-
-                        if (startX < endX) {
-                            zoomAreaRec.visible = draw
-                            zoomAreaRec.x = x
-                            zoomAreaRec.y = y
-                            zoomAreaRec.width = w
-                            zoomAreaRec.height = h
-                        }
-
+                        zoomAreaRec.visible = draw
+                        zoomAreaRec.x = x
+                        zoomAreaRec.y = y
+                        zoomAreaRec.width = w
+                        zoomAreaRec.height = h
                     }
                 }
 

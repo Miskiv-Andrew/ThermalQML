@@ -1,4 +1,4 @@
-import QtQuick 2.15
+import QtQuick
 import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
 import QtCharts 6.3
@@ -59,7 +59,6 @@ Window {
 
                 Page {
                     id: pageDevices
-
 
                     Rectangle {
                         id: rectangleDevices
@@ -124,6 +123,7 @@ Window {
                             }
                         }
                     }
+
                 }
 
                 Page {
@@ -268,6 +268,7 @@ Window {
                 }
             }
         }
+
     }
 }
 
