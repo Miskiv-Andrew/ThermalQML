@@ -339,3 +339,120 @@ LinearGradient {
 	anchors.fill: glow
 	source: glow
 }
+
+//--- Menu bar with style (style dont work)
+
+    menuBar: MenuBar {
+        Menu {
+            title: qsTr("&File")
+            Action { text: qsTr("&New...") }
+            Action { text: qsTr("&Open...") }
+            Action { text: qsTr("&Save") }
+            Action { text: qsTr("Save &As...") }
+            MenuSeparator { }
+            Action { text: qsTr("&Quit") }
+        }
+        Menu {
+            title: qsTr("&Edit")
+            Action { text: qsTr("Cu&t") }
+            Action { text: qsTr("&Copy") }
+            Action { text: qsTr("&Paste") }
+        }
+        Menu {
+            title: qsTr("&Help")
+            Action { text: qsTr("&About") }
+        }
+
+        style: MenuBarStyle {
+
+            padding {
+                left: 8
+                right: 8
+                top: 3
+                bottom: 3
+            }
+
+            background: Rectangle {
+                id: rect
+                border.color: menuBorderColor
+                color: menuBackgroundColor
+            }
+
+            itemDelegate: Rectangle {            // the menus
+                implicitWidth: lab.contentWidth * 1.4           // adjust width the way you prefer it
+                implicitHeight: lab.contentHeight               // adjust height the way you prefer it
+                color: styleData.selected || styleData.open ? "red" : "transparent"
+                Label {
+                    id: lab
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: styleData.selected  || styleData.open ? "white" : "red"
+                    font.wordSpacing: 10
+                    text: styleData.text
+                }
+            }
+
+            menuStyle: MenuStyle {               // the menus items
+                id: goreStyle
+
+                frame: Rectangle {
+                    color: menuBackgroundColor
+                }
+
+                itemDelegate {
+                    background: Rectangle {
+                        color:  styleData.selected || styleData.open ? "red" : menuBackgroundColor
+                        radius: styleData.selected ? 3 : 0
+                    }
+
+                    label: Label {
+                        color: styleData.selected ? "white" : "red"
+                        text: styleData.text
+                    }
+
+                    submenuIndicator: Text {
+                        text: "\u25ba"
+                        font: goreStyle.font
+                        color: styleData.selected  || styleData.open ? "white" : "red"
+                        styleColor: Qt.lighter(color, 4)
+                    }
+
+                    shortcut: Label {
+                        color: styleData.selected ? "white" : "red"
+                        text: styleData.shortcut
+                    }
+
+                    checkmarkIndicator: CheckBox {          // not strinctly a Checkbox. A Rectangle is fine too
+                        checked: styleData.checked
+
+                        style: CheckBoxStyle {
+
+                            indicator: Rectangle {
+                                implicitWidth: goreStyle.font.pixelSize
+                                implicitHeight: implicitWidth
+                                radius: 2
+                                color: control.checked ?  "red" : menuBackgroundColor
+                                border.color: control.activeFocus ? menuBackgroundColor : "red"
+                                border.width: 2
+                                Rectangle {
+                                    visible: control.checked
+                                    color: "red"
+                                    border.color: menuBackgroundColor
+                                    border.width: 2
+                                    radius: 2
+                                    anchors.fill: parent
+                                }
+                            }
+                            spacing: 10
+                        }
+                    }
+                }
+
+                // scrollIndicator:               // <--- could be an image
+
+                separator: Rectangle {
+                    width: parent.width
+                    implicitHeight: 2
+                    color: "white"
+                }
+            }
+        }

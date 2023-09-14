@@ -10,13 +10,42 @@ import "modules"
 import "windows"
 import "scripts"
 
-Window {
+ApplicationWindow  {
     id: app
     width: 1280
     height: 720
     visible: true
     color: "#00000000"
     title: qsTr("UTC")
+
+    menuBar: MenuBar {
+        Menu {
+            title: qsTr("&Файл")
+            Action { text: qsTr("&New...") }
+            Action { text: qsTr("&Open...") }
+            Action { text: qsTr("&Save") }
+            Action { text: qsTr("Save &As...") }
+            MenuSeparator { }
+            Action { text: qsTr("&Quit") }
+        }
+        Menu {
+            title: qsTr("&Правка")
+            Action { text: qsTr("Cu&t") }
+            Action { text: qsTr("&Copy") }
+            Action { text: qsTr("&Paste") }
+        }
+        Menu {
+            title: qsTr("&Вигляд")
+            CheckBox { text: qsTr("Список девайсів"); onClicked: { WinDevlist.visible = checked; } }
+            CheckBox { text: qsTr("Вікно спектра"); onClicked: { WinSpectr.visible = checked; } }
+            CheckBox { text: qsTr("Вікно коефіціентів"); onClicked: { WinCoeff.visible = checked; } }
+        }
+        Menu {
+            title: qsTr("&Справка")
+            Action { text: qsTr("&About") }
+        }
+
+    }
 
     // INTERNAL FUNCTIONS
     WindowControlScript {

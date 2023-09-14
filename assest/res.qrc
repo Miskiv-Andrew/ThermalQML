@@ -1983,5 +1983,6 @@
         <file>qml/scripts/WindowControlScript.qml</file>
         <file>qml/windows/WinDevlist.qml</file>
         <file>qml/windows/Test.qml</file>
+        <file>qml/windows/WinManFurnace.qml</file>
     </qresource>
 </RCC>
