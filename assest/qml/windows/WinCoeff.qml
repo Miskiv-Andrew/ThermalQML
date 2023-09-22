@@ -99,9 +99,53 @@ Item {
                 anchors.leftMargin: 0
                 anchors.topMargin: 0
 
-                TableView{
-                    id: tableViewRange
+                TableView {
+                    id: tableViewCoeff
                     anchors.fill: parent
+                    //alternatingRows: true
+                    columnSpacing: 1
+                    rowSpacing: 1
+                    clip: true
+                    boundsBehavior: Flickable.StopAtBounds
+
+                    model: TableModel {
+                        TableModelColumn { display: "Name" }
+                        TableModelColumn { display: "50°C" }
+                        TableModelColumn { display: "40°C" }
+                        TableModelColumn { display: "30°C" }
+                        TableModelColumn { display: "20°C" }
+                        TableModelColumn { display: "10°C" }
+                        TableModelColumn { display: "0°C" }
+                        TableModelColumn { display: "-10°C" }
+                        TableModelColumn { display: "-20°C" }
+
+                        // Define the data
+                        rows: [
+                            { Name: "/",   "50°C": "50°C", "40°C": "40°C", "30°C": "30°C", "20°C": "20°C", "10°C": "10°C", "0°C": "0°C", "-10°C": "-10°C", "-20°C": "-20°C" },
+                            { Name: "Темп.",   "50°C": 10, "40°C": 15, "30°C": 20, "20°C": 25, "10°C": 30, "0°C": 35, "-10°C": 40, "-20°C": 45 },
+                            { Name: "Код Uzm", "50°C": 8, "40°C": 12, "30°C": 16, "20°C": 20, "10°C": 24, "0°C": 28, "-10°C": 32, "-20°C": 36 },
+                            { Name: "Шум",     "50°C": 5, "40°C": 10, "30°C": 15, "20°C": 20, "10°C": 25, "0°C": 30, "-10°C": 35, "-20°C": 40 },
+                            { Name: "Сдвиг",   "50°C": 12, "40°C": 18, "30°C": 24, "20°C": 30, "10°C": 36, "0°C": 42, "-10°C": 48, "-20°C": 54 }
+                        ]
+                    }
+
+                    delegate: Rectangle {
+                        implicitWidth: 60
+                        implicitHeight: 30
+                        border.width: 1
+                        radius: 3
+
+                        TextEdit {
+                            anchors.fill: parent
+                            text: display
+                            font.family: "Poppins Medium"
+                            font.styleName: "Poppins Light"
+                            horizontalAlignment: TextEdit.AlignHCenter
+                            verticalAlignment: TextEdit.AlignVCenter
+                            selectByMouse: true
+
+                        }
+                    }
                 }
             }
 
@@ -117,9 +161,47 @@ Item {
                 anchors.rightMargin: 0
                 anchors.topMargin: 0
 
-                TableView{
+                TableView {
                     id: tableViewCurrent
                     anchors.fill: parent
+                    //alternatingRows: true
+                    columnSpacing: 1
+                    rowSpacing: 1
+                    clip: true
+                    boundsBehavior: Flickable.StopAtBounds
+
+                    model: TableModel {
+                        TableModelColumn { display: "Name" }
+                        TableModelColumn { display: "Curr" }
+
+
+                        // Define the data
+                        rows: [
+                            { Name: "/",   "Curr": "Поточна", },
+                            { Name: "Темп.",   "Curr": 10 },
+                            { Name: "Код Uzm", "Curr": 8 },
+                            { Name: "Шум",     "Curr": 5  },
+                            { Name: "Сдвиг",   "Curr": 12 }
+                        ]
+                    }
+
+                    delegate: Rectangle {
+                        implicitWidth: 60
+                        implicitHeight: 30
+                        border.width: 1
+                        radius: 4
+
+                        TextEdit {
+                            anchors.fill: parent
+                            text: display
+                            font.family: "Poppins Medium"
+                            font.styleName: "Poppins Light"
+                            horizontalAlignment: TextEdit.AlignHCenter
+                            verticalAlignment: TextEdit.AlignVCenter
+                            selectByMouse: true
+
+                        }
+                    }
                 }
             }
 
