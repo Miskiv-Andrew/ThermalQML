@@ -21,18 +21,16 @@ ApplicationWindow  {
     menuBar: MenuBar {
         Menu {
             title: qsTr("&Файл")
-            Action { text: qsTr("&New...") }
-            Action { text: qsTr("&Open...") }
-            Action { text: qsTr("&Save") }
-            Action { text: qsTr("Save &As...") }
-            MenuSeparator { }
-            Action { text: qsTr("&Quit") }
+            Action { text: qsTr("Відкрити спектр") }
+            Action { text: qsTr("Зберегти спектр") }
+            Action { text: qsTr("Зберегти CSV") }
         }
         Menu {
-            title: qsTr("&Правка")
-            Action { text: qsTr("Cu&t") }
-            Action { text: qsTr("&Copy") }
-            Action { text: qsTr("&Paste") }
+            title: qsTr("&Управління")
+            Action { text: qsTr("Пічка")
+                onTriggered: { manualHeater.show()  }
+            }
+
         }
         Menu {
             title: qsTr("&Вигляд")
@@ -45,6 +43,12 @@ ApplicationWindow  {
             Action { text: qsTr("&About") }
         }
 
+    }
+
+    WinHeater{
+        //additional window of manual controll of heater
+        id: manualHeater
+        visible: true;
     }
 
     // INTERNAL FUNCTIONS
@@ -125,30 +129,25 @@ ApplicationWindow  {
                                 anchors.topMargin: 10
                                 anchors.leftMargin: 10
 
-                                Column {
-                                    id: column
-                                    anchors.fill: parent
-                                    padding: 0
-                                    spacing: 0
 
-                                    WinSpectr{
-                                        id: itemSpectr
-                                        width: parent.width
-                                        height: parent.height/2
-                                        anchors.bottomMargin: 10
-                                    }
-
-                                    WinCoeff{
-                                        id: itemCoeff
-                                        width: parent.width
-                                        height: parent.height/2
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        anchors.top: itemSpectr.bottom
-                                        anchors.bottom: parent.bottom
-                                        anchors.topMargin: 10
-                                    }
+                                WinSpectr{
+                                    id: itemSpectr
+                                    width: parent.width
+                                    height: parent.height/2
+                                    anchors.bottomMargin: 10
                                 }
+
+                                WinCoeff{
+                                    id: itemCoeff
+                                    width: parent.width
+                                    height: parent.height/2
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    anchors.top: itemSpectr.bottom
+                                    anchors.bottom: parent.bottom
+                                    anchors.topMargin: 10
+                                }
+
                             }
                         }
                     }
@@ -254,47 +253,40 @@ ApplicationWindow  {
                 anchors.bottom: parent.bottom
                 anchors.topMargin: 0
 
-                Column {
-                    id: columnLeftMenu
-                    x: 0
-                    y: 148
-                    anchors.fill: parent
-                    topPadding: rectangleDevList.y
+                SceLeftMenuButton {
+                    id: buttonDevices
+                    width: 30
+                    btnIcon: "qrc:/icons/house.svg"
+                    anchors.top: parent.top
+                    anchors.topMargin: 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    onClicked: swipeView.setCurrentIndex(0)
 
-                    SceLeftMenuButton {
-                        id: buttonDevices
-                        width: 30
-                        btnIcon: "qrc:/icons/house.svg"
-                        anchors.top: parent.top
-                        anchors.topMargin: 20
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        onClicked: swipeView.setCurrentIndex(0)
-
-                    }
-
-                    SceLeftMenuButton {
-                        id: buttonSettings
-                        width: 30
-                        btnIcon: "qrc:/icons/gear.svg"
-                        anchors.bottom: buttonTest.top
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottomMargin: 20
-                        onClicked: swipeView.setCurrentIndex(1)
-
-                    }
-
-
-                    SceLeftMenuButton {
-                        id: buttonTest
-                        width: 30
-                        btnIcon: "qrc:/icons/terminal.svg"
-                        anchors.bottom: parent.bottom
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottomMargin: 20
-                        onClicked: swipeView.setCurrentIndex(2)
-
-                    }
                 }
+
+                SceLeftMenuButton {
+                    id: buttonSettings
+                    width: 30
+                    btnIcon: "qrc:/icons/gear.svg"
+                    anchors.bottom: buttonTest.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottomMargin: 20
+                    onClicked: swipeView.setCurrentIndex(1)
+
+                }
+
+
+                SceLeftMenuButton {
+                    id: buttonTest
+                    width: 30
+                    btnIcon: "qrc:/icons/terminal.svg"
+                    anchors.bottom: parent.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottomMargin: 20
+                    onClicked: swipeView.setCurrentIndex(2)
+
+                }
+
             }
         }
 

@@ -1983,6 +1983,7 @@
         <file>qml/scripts/WindowControlScript.qml</file>
         <file>qml/windows/WinDevlist.qml</file>
         <file>qml/windows/Test.qml</file>
-        <file>qml/windows/WinManFurnace.qml</file>
+        <file>qml/windows/WinHeater.qml</file>
+        <file>qml/modules/SceSlider.qml</file>
     </qresource>
 </RCC>

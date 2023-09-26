@@ -2,7 +2,6 @@ import QtQuick
 
 Item {
 
-    readonly property string ppBlack:               ppBlackFont.name
     readonly property string ppBlackItalic:         ppBlackItalicFont.name
     readonly property string ppBold:                ppBoldFont.name
     readonly property string ppExtraBold:           ppExtraBoldFont.name
@@ -20,9 +19,8 @@ Item {
     readonly property string ppThinItalic:          ppThinItalicFont.name
 
 
-    FontLoader{ id: ppBlackFont;            source: "qrc:/Fonts/Poppins-Black.ttf" }
     FontLoader{ id: ppBlackItalicFont;      source: "qrc:/Fonts/Poppins-BlackItalic.ttf" }
-    FontLoader{ id: ppBoldFont;             source: "qrc:/Fonts/Poppins-Bold.ttfk.ttf" }
+    FontLoader{ id: ppBoldFont;             source: "qrc:/Fonts/Poppins-Bold.ttf" }
     FontLoader{ id: ppExtraBoldFont;        source: "qrc:/Fonts/Poppins-ExtraBold.ttf" }
     FontLoader{ id: ppExtraBoldItalicFont;  source: "qrc:/Fonts/Poppins-ExtraBoldItalic.ttf" }
     FontLoader{ id: ppExtraLightFont;       source: "qrc:/Fonts/Poppins-ExtraLight.ttf" }

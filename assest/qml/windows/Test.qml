@@ -13,7 +13,6 @@ Item {
         id: rectangleCoef
         radius: 10
         color: "#fafafa"
-        anchors.top: rectangleChart.bottom
         anchors.fill: parent
         layer.enabled: true
         layer.effect: DropShadow {

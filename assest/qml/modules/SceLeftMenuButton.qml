@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
 
+
+
 Button{
     id: btnTopBar
 
@@ -25,9 +27,11 @@ Button{
     width: 30
     height: 30
     layer.enabled: false
-    background: Rectangle{
+
+    Rectangle{
         id: bgBtnTopBar
         color: internal.dynamicColor
+        anchors.fill: parent
 
 
         Image {
@@ -62,6 +66,7 @@ Button{
         visible: activeMenu ? true : false
     }
 }
+
 
 /*##^##
 Designer {
