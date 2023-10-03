@@ -5,9 +5,12 @@ import "../modules"
 
 Window {
 
-    width: 600
+    width: 800
     height: 300
     visible: true
+
+    property var currentTemp: null
+    property var targetTemp: null
 
     Connections {
         target: disp
@@ -19,6 +22,18 @@ Window {
         function onSend_qml_2_param(data, temp) {
             textAreaLog.append(data)
             currentTemp.text = temp
+        }
+    }
+
+    // Timer for update temperature lable
+    Timer {
+        id: updateTempLable
+        interval: 2000 // 2 seconds
+        repeat: true
+        running: true
+
+        onTriggered: {
+            temperatureLable.text = `Цільова темепратура: ${targetTemp} / Поточна температура: ${currentTemp}`
         }
     }
 
@@ -124,14 +139,14 @@ Window {
                 }
 
                 Text {
-                    id: currentTemp
+                    id: temperatureLable
                     y: sliderTemp.y
                     width: sliderTemp.width
                     height: 30
-                    text: qsTr("Поточна температура")
+                    text: qsTr("Цільова темепратура: -- / Поточна температура: --")
                     anchors.right: parent.right
                     anchors.top: sliderTemp.bottom
-                    horizontalAlignment: Text.AlignLeft
+                    horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     anchors.rightMargin: 10
                     font.family: "Poppins"
@@ -165,19 +180,19 @@ Window {
                         running: false
 
                         onTriggered: {
-                            let target_temp = sliderTemp.value.toFixed(2)
+                            targetTemp = sliderTemp.value.toFixed(2)
                             // Send your temperature change command here
-                            disp.qml_rec_order_heater(4, target_temp)
-                            console.log("Temperature command sent:", target_temp)
+                            disp.qml_rec_order_heater(4, targetTemp)
+                            console.log("Temperature command sent:", targetTemp)
                             //hide highlight when command accepted
-                            //sliderTemp.highlight.visible = false
+                            sliderTemp.highlight.visible = false
                         }
                     }
 
                     // Handler for slider svalue changes
                     onValueChanged: {
                         // Restart the timer on every value change
-                        //sliderTemp.highlight.visible = true
+                        sliderTemp.highlight.visible = true
                         delayTimer.restart()
                     }
                 }
