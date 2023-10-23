@@ -116,6 +116,14 @@ ApplicationWindow  {
                                 anchors.bottomMargin: 10
                             }
 
+                            SceSpitter{
+                                id: splitter2
+                                elementParent: parent
+                                verticalOrientation: true
+                                element1: rectangleDevList
+                                element2: rectangleAdditional
+                            }
+
                             Rectangle {
                                 id: rectangleAdditional
                                 color: "#00000000"
@@ -124,28 +132,56 @@ ApplicationWindow  {
                                 anchors.right: parent.right
                                 anchors.top: parent.top
                                 anchors.bottom: parent.bottom
-                                anchors.rightMargin: 10
-                                anchors.bottomMargin: 10
-                                anchors.topMargin: 10
-                                anchors.leftMargin: 10
+                                anchors.margins: 10
 
 
                                 WinSpectr{
                                     id: itemSpectr
                                     width: parent.width
-                                    height: parent.height/2
+                                    height: parent.height * 0.5
                                     anchors.bottomMargin: 10
                                 }
+
+                                SceSpitter{
+                                    id: splitter1
+                                    elementParent: parent
+                                    element1: itemSpectr
+                                    element2: itemCoeff
+                                }
+
+//                                Rectangle {
+//                                    id: rectangleAdditionalSplitter
+//                                    height: 10
+//                                    radius: 5
+//                                    color: "#00e00cbb"
+//                                    width: parent.width
+//                                    anchors.top: itemSpectr.bottom
+
+//                                    MouseArea {
+//                                        id: additionalSplitterMouseArea
+//                                        anchors.fill: parent
+//                                        cursorShape: Qt.SplitVCursor
+//                                        property int startY: 0
+//                                        property int startHeight: itemSpectr.height
+
+//                                        onPressed: {
+//                                            startY = mouse.y
+//                                            startHeight = itemSpectr.height
+//                                        }
+
+//                                        onReleased: {
+//                                            var deltaY = mouse.y - startY
+//                                            itemSpectr.height = startHeight + deltaY
+//                                        }
+//                                    }
+//                                }
 
                                 WinCoeff{
                                     id: itemCoeff
                                     width: parent.width
-                                    height: parent.height/2
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.top: itemSpectr.bottom
-                                    anchors.bottom: parent.bottom
-                                    anchors.topMargin: 10
+                                    height: parent.height - itemSpectr.height - splitter1.height
+                                    anchors.top: splitter1.bottom
+                                    anchors.topMargin: 0
                                 }
 
                             }

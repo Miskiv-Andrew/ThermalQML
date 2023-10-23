@@ -30,6 +30,7 @@ DISTFILES += \
     assest/qml/modules/SceDeviceItem.qml \
     assest/qml/modules/SceLeftMenuButton.qml \
     assest/qml/modules/SceSlider.qml \
+    assest/qml/modules/SceSpitter.qml \
     assest/qml/modules/SceTopBarButton.qml \
     assest/qml/scripts/SpectrumControlScript.qml \
     assest/qml/scripts/WindowControlScript.qml \
