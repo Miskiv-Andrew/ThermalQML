@@ -42,4 +42,5 @@ DISTFILES += \
 
 HEADERS += \
     backend/dispatcher.h \
+    backend/filemanager.h \
     backend/heater.h

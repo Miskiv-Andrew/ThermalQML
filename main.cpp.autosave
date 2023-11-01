@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
 
     FileManager fileManager;
     context->setContextProperty("fmContext", &fileManager);
+    
+    qmlRegisterType<FileManager>("MyApp", 1, 0, "SpectrumData");
 
     const QUrl url(u"qrc:/qml/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

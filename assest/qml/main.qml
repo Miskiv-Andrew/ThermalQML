@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
 import QtCharts 6.3
 import Qt.labs.qmlmodels 1.0
-
+import QtQuick.Dialogs
 
 //---User Module Includes
 import "modules"
@@ -21,7 +21,9 @@ ApplicationWindow  {
     menuBar: MenuBar {
         Menu {
             title: qsTr("&Файл")
-            Action { text: qsTr("Відкрити спектр") }
+            Action { text: qsTr("Відкрити спектр")
+                onTriggered: { fileDialog.open() }
+            }
             Action { text: qsTr("Зберегти спектр") }
             Action { text: qsTr("Зберегти CSV") }
         }
@@ -43,6 +45,19 @@ ApplicationWindow  {
             Action { text: qsTr("&About") }
         }
 
+    }
+
+    FileDialog {
+        id: fileDialog
+        title: "Please choose a file"
+        onAccepted: {
+            var filePath = fileDialog.selectedFile.toString().replace("file:///",'')
+            console.log("You chose: " + filePath)
+            fmContext.loadCSVFile(filePath)
+        }
+        onRejected: {
+            console.log("Canceled")
+        }
     }
 
     WinHeater{
@@ -138,7 +153,7 @@ ApplicationWindow  {
                                 WinSpectr{
                                     id: itemSpectr
                                     width: parent.width
-                                    height: parent.height * 0.5
+                                    height: parent.height * 0.7
                                     anchors.bottomMargin: 10
                                 }
 
