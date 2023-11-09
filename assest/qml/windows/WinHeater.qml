@@ -8,7 +8,7 @@ import "../modules"
 Window {
 
     width: 1200
-    height: 720
+    height: 400
     visible: true
 
     property double previosTemperature: 0

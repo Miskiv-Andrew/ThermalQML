@@ -2,11 +2,62 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
 import Qt.labs.qmlmodels 1.0
+import QtQuick.Layouts
+
+import QRegType 1.0
 
 Item {
     visible: true
     width: 600
     height: 300
+
+    Connections {
+        target: TableViewContext
+
+        function onHeaderDataModified(data) {
+            // Clear the existing items in the tableColums model
+            param.headerModel.clear();
+            param.tableColums = data.length;
+
+            // Populate the tableColums model with data from headerData
+            for (var i = 0; i < data.length; i++) {
+                param.headerModel.append({ "headerText": data[i] });
+            }
+        }
+
+    }
+
+    Component.onCompleted: {
+        console.log("headerData length: " + TableViewContext.headerData.length);
+
+        // Clear the existing items in the tableColums model
+        param.headerModel.clear();
+
+        // Populate the tableColums model with data from headerData
+        for (var i = 0; i < TableViewContext.headerData.length; i++) {
+            param.headerModel.append({ "headerText": TableViewContext.headerData[i] });
+        }
+
+        console.log(param.headerModel);  // Verify that tableColums is populated
+    }
+
+
+    Item {
+        id: param
+
+        property int contentMargins: 10
+        property int tableWidth: content.width
+
+        property ListModel headerModel: ListModel {}
+
+        property int tableColums: 11
+        property int tableRows: 4
+
+        property int tableColumnsSpacing: 0
+        property int tableRowSpacing: 1
+
+        property int tableCellRadius: 0
+    }
 
     Rectangle {
         id: rectangleCoef
@@ -20,8 +71,6 @@ Item {
             horizontalOffset: 2
             verticalOffset: 4
             radius: 4
-
-
         }
 
         Rectangle{
@@ -30,181 +79,148 @@ Item {
             y: 10
             color: "#fafafa"
             anchors.fill: parent
-            anchors.rightMargin: 5
-            anchors.leftMargin: 5
-            anchors.bottomMargin: 5
-            anchors.topMargin: 5
+            anchors.margins: 5
 
+            ColumnLayout{
+                anchors.fill: parent
 
-            Rectangle {
-                id: rectangle
-                height: 50
-                color: "#f0f0f0"
-                radius: 10
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
-                anchors.topMargin: 0
+                Rectangle {
+                    Layout.preferredHeight: 50
+                    Layout.fillWidth: true
+                    color: "#f0f0f0"
+                    radius: 10
 
-                CheckBox {
-                    id: checkThermalCompOnOff
-                    x: 414
-                    width: 170
-                    height: 30
-                    text: qsTr("Термокомпенсація")
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    font.pointSize: 12
-                    font.family: "Arial"
-                    focusPolicy: Qt.ClickFocus
-                    anchors.rightMargin: 10
-                }
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 10
 
-                Button {
-                    id: buttonWriteThermalCoef
-                    width: 100
-                    height: 30
-                    text: qsTr("Зчитати")
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    font.family: "Arial"
-                    font.pointSize: 12
-                    anchors.leftMargin: 10
-                }
+                        CheckBox {
+                            Layout.fillWidth: true
+                            id: checkThermalCompOnOff
+                            text: qsTr("Термокомпенсація")
+                            font.pointSize: 12
+                            font.family: "Arial"
+                            focusPolicy: Qt.ClickFocus
+                        }
 
-                Button {
-                    id: buttonReadThermalCoef
-                    width: 100
-                    height: 30
-                    text: qsTr("Зашити")
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: buttonWriteThermalCoef.right
-                    font.family: "Arial"
-                    font.pointSize: 12
-                    anchors.leftMargin: 10
-                }
-            }
+                        Button {
+                            id: buttonWriteThermalCoef
+                            text: qsTr("Зчитати")
+                            font.family: "Arial"
+                            font.pointSize: 12
+                        }
 
-            Rectangle {
-                id: rectangleTableRange
-                width: parent.width*0.7
-                color: "#ffffff"
-                anchors.left: parent.left
-                anchors.top: rectangle.bottom
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 0
-                anchors.leftMargin: 0
-                anchors.topMargin: 0
-
-                TableView {
-                    id: tableViewCoeff
-                    anchors.fill: parent
-                    //alternatingRows: true
-                    columnSpacing: 1
-                    rowSpacing: 1
-                    clip: true
-                    boundsBehavior: Flickable.StopAtBounds
-
-                    model: TableModel {
-                        TableModelColumn { display: "Name" }
-                        TableModelColumn { display: "50°C" }
-                        TableModelColumn { display: "40°C" }
-                        TableModelColumn { display: "30°C" }
-                        TableModelColumn { display: "20°C" }
-                        TableModelColumn { display: "10°C" }
-                        TableModelColumn { display: "0°C" }
-                        TableModelColumn { display: "-10°C" }
-                        TableModelColumn { display: "-20°C" }
-
-                        // Define the data
-                        rows: [
-                            { Name: "/",   "50°C": "50°C", "40°C": "40°C", "30°C": "30°C", "20°C": "20°C", "10°C": "10°C", "0°C": "0°C", "-10°C": "-10°C", "-20°C": "-20°C" },
-                            { Name: "Темп.",   "50°C": 10, "40°C": 15, "30°C": 20, "20°C": 25, "10°C": 30, "0°C": 35, "-10°C": 40, "-20°C": 45 },
-                            { Name: "Код Uzm", "50°C": 8, "40°C": 12, "30°C": 16, "20°C": 20, "10°C": 24, "0°C": 28, "-10°C": 32, "-20°C": 36 },
-                            { Name: "Шум",     "50°C": 5, "40°C": 10, "30°C": 15, "20°C": 20, "10°C": 25, "0°C": 30, "-10°C": 35, "-20°C": 40 },
-                            { Name: "Сдвиг",   "50°C": 12, "40°C": 18, "30°C": 24, "20°C": 30, "10°C": 36, "0°C": 42, "-10°C": 48, "-20°C": 54 }
-                        ]
-                    }
-
-                    delegate: Rectangle {
-                        implicitWidth: 60
-                        implicitHeight: 30
-                        border.width: 1
-                        radius: 3
-
-                        TextEdit {
-                            anchors.fill: parent
-                            text: display
-                            font.family: "Poppins Medium"
-                            font.styleName: "Poppins Light"
-                            horizontalAlignment: TextEdit.AlignHCenter
-                            verticalAlignment: TextEdit.AlignVCenter
-                            selectByMouse: true
-
+                        Button {
+                            id: buttonReadThermalCoef
+                            text: qsTr("Зашити")
+                            font.family: "Arial"
+                            font.pointSize: 12
                         }
                     }
                 }
-            }
-
-            Rectangle {
-                id: rectangleTableCurrent
-                x: 317
-                width: parent.width*0.3
-                color: "#ffffff"
-                anchors.right: parent.right
-                anchors.top: rectangle.bottom
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 0
-                anchors.rightMargin: 0
-                anchors.topMargin: 0
-
-                TableView {
-                    id: tableViewCurrent
-                    anchors.fill: parent
-                    //alternatingRows: true
-                    columnSpacing: 1
-                    rowSpacing: 1
-                    clip: true
-                    boundsBehavior: Flickable.StopAtBounds
-
-                    model: TableModel {
-                        TableModelColumn { display: "Name" }
-                        TableModelColumn { display: "Curr" }
 
 
-                        // Define the data
-                        rows: [
-                            { Name: "/",   "Curr": "Поточна", },
-                            { Name: "Темп.",   "Curr": 10 },
-                            { Name: "Код Uzm", "Curr": 8 },
-                            { Name: "Шум",     "Curr": 5  },
-                            { Name: "Сдвиг",   "Curr": 12 }
-                        ]
+                Rectangle {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+                    id: contentTable
+                    color: "#a0a0a0"
+                    radius: 10
+
+                    onWidthChanged: {
+                        param.tableWidth = contentTable.width;
                     }
 
-                    delegate: Rectangle {
-                        implicitWidth: 60
-                        implicitHeight: 30
-                        border.width: 1
-                        radius: 4
+                    ColumnLayout {
+                        anchors.fill: parent
+                        spacing: 0
 
-                        TextEdit {
-                            anchors.fill: parent
-                            text: display
-                            font.family: "Poppins Medium"
-                            font.styleName: "Poppins Light"
-                            horizontalAlignment: TextEdit.AlignHCenter
-                            verticalAlignment: TextEdit.AlignVCenter
-                            selectByMouse: true
+                        Row{
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 25
+                            id: rowHeader
+
+                            Repeater{
+                                model: param.headerModel
+                                id: headerModel
+
+                                Rectangle {
+                                    id: headerDelegate
+                                    width: ((parent.width/headerModel.count) - rowHeader.spacing)
+                                    height: 25
+                                    color: "transparent"
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: model.headerText  // Use modelData to display the header text
+                                    }
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 2
+                            id: spacerHorizontal
+                            color: "black"
+                        }
+
+                        TableView {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            id: tableView
+
+                            columnSpacing: param.tableColumnsSpacing
+                            rowSpacing: param.tableRowSpacing
+                            clip: true
+
+                            model: CoeffTableModel {
+                                id: tableModel
+                            }
+
+                            delegate: Rectangle {
+                                implicitWidth: ((param.tableWidth/param.tableColums))
+                                implicitHeight: 50
+                                border.width: 0
+                                radius: param.tableCellRadius
+                                color: (model.row%2) ? "#f0f0f0" : "#ffffff"
+
+                                TextInput {
+                                    text: display
+                                    selectByMouse: true
+                                    anchors.fill: parent
+                                    horizontalAlignment: TextEdit.AlignHCenter
+                                    verticalAlignment: TextEdit.AlignVCenter
+                                    validator: DoubleValidator {
+                                        top: 10000.00;
+                                        bottom: -100.00;
+                                        decimals: 2;
+                                        //locale: Qt.locale("en_US")
+                                        notation: DoubleValidator.StandardNotation }
+
+                                    onEditingFinished: {
+
+                                        console.log("Model index is: ", tableModel.index(row, column));
+                                        var modifiedText = text.replace(",",".")
+                                        //  write data to model //    setData method in tablemodel.cpp  //
+
+                                        //first row of table always temperature
+                                        if(row === 0) {
+                                            tableModel.setData(tableModel.index(row, column), parseFloat(modifiedText), Qt.EditRole);
+                                        }
+                                        else{
+                                            tableModel.setData(tableModel.index(row, column), parseInt(modifiedText), Qt.EditRole);
+                                        }
+                                    }
+                                }
+                            }
 
                         }
+
                     }
                 }
             }
-
-
         }
     }
 }

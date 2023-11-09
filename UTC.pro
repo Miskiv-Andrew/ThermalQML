@@ -1,6 +1,7 @@
 QT += quick charts
 
 SOURCES += \
+    backend/tablemodel.cpp \
     main.cpp
 
 resources.files +=      assest/qml/main.qml \
@@ -43,4 +44,6 @@ DISTFILES += \
 HEADERS += \
     backend/dispatcher.h \
     backend/filemanager.h \
-    backend/heater.h
+    backend/heater.h \
+    backend/spectrumsource.h \
+    backend/tablemodel.h

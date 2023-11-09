@@ -53,7 +53,7 @@ ApplicationWindow  {
         onAccepted: {
             var filePath = fileDialog.selectedFile.toString().replace("file:///",'')
             console.log("You chose: " + filePath)
-            fmContext.loadCSVFile(filePath)
+            itemSpectr.updateSpectrum(filePath)
         }
         onRejected: {
             console.log("Canceled")
@@ -63,7 +63,7 @@ ApplicationWindow  {
     WinHeater{
         //additional window of manual controll of heater
         id: manualHeater
-        visible: true;
+        visible: false;
     }
 
     // INTERNAL FUNCTIONS
@@ -163,33 +163,6 @@ ApplicationWindow  {
                                     element1: itemSpectr
                                     element2: itemCoeff
                                 }
-
-//                                Rectangle {
-//                                    id: rectangleAdditionalSplitter
-//                                    height: 10
-//                                    radius: 5
-//                                    color: "#00e00cbb"
-//                                    width: parent.width
-//                                    anchors.top: itemSpectr.bottom
-
-//                                    MouseArea {
-//                                        id: additionalSplitterMouseArea
-//                                        anchors.fill: parent
-//                                        cursorShape: Qt.SplitVCursor
-//                                        property int startY: 0
-//                                        property int startHeight: itemSpectr.height
-
-//                                        onPressed: {
-//                                            startY = mouse.y
-//                                            startHeight = itemSpectr.height
-//                                        }
-
-//                                        onReleased: {
-//                                            var deltaY = mouse.y - startY
-//                                            itemSpectr.height = startHeight + deltaY
-//                                        }
-//                                    }
-//                                }
 
                                 WinCoeff{
                                     id: itemCoeff
