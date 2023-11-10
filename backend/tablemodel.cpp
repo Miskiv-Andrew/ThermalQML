@@ -12,15 +12,15 @@ CoeffTableModel::CoeffTableModel(QObject *parent)
         tableData.append(temperatureRow);
 
     QList<QVariant> uzmRow;
-    uzmRow << "Uзм" << 1200 << 1150 << 1100 << 1000 << 900 << 850 << 800 << 780 << "" << 740;
+    uzmRow << "Uзм" << 1200 << 1150 << 1100 << 1000 << 900 << 850 << 800 << 780 << "Uзм" << 740;
     tableData.append(uzmRow);
 
     QList<QVariant> zsuwRow;
-    zsuwRow << "Зсув" << 3 << 3 << 3 << 3 << 4 << 4 << 4 << -5 << "" << 5;
+    zsuwRow << "Зсув" << 3 << 3 << 3 << 3 << 4 << 4 << 4 << -5 << "Ku" << 5;
         tableData.append(zsuwRow);
 
     QList<QVariant> noiseRow;
-    noiseRow << "Шум" << 2 << 2 << 1 << 1 << 0 << 0 << 0 << 0 << "" << 0;
+    noiseRow << "Шум" << 2 << 2 << 1 << 1 << 0 << 0 << 0 << 0 << "Шум" << 0;
     tableData.append(noiseRow);
 
     //test

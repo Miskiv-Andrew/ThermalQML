@@ -91,12 +91,13 @@ Item {
                            Layout.fillWidth: true
                         }
 
-                        Button {
-                            id: delayButtonClearSpectr
-                            text: qsTr("Очистити")
+                        RoundButton {
+                            Layout.preferredWidth: 120
+                            display: AbstractButton.TextBesideIcon
+                            icon.source: "qrc:/icons/eraser.svg"
+                            text: "Очистити"
                             font.pointSize: 12
-                            font.family: "Arial"
-                            onClicked: clearChart()
+                            onClicked: spectrumSeries.clear()
                         }
                     }
                 }

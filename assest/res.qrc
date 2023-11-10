@@ -1986,5 +1986,6 @@
         <file>qml/windows/WinHeater.qml</file>
         <file>qml/modules/SceSlider.qml</file>
         <file>qml/modules/SceSpitter.qml</file>
+        <file>icons/win-icon.png</file>
     </qresource>
 </RCC>

@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv); //Here etc..
+    app.setWindowIcon(QIcon(":/icons/win-icon.png"));
 
     //qmlRegisterType<dispatcher>("WinHeater", 1, 0, "disp");
 

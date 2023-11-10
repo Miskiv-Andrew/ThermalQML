@@ -1,5 +1,6 @@
 import QtQuick
-import QtQuick.Controls 2.15
+import QtQuick.Controls
+import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import QtCharts 6.3
 import Qt.labs.qmlmodels 1.0
@@ -275,41 +276,43 @@ ApplicationWindow  {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                anchors.topMargin: 0
 
-                SceLeftMenuButton {
-                    id: buttonDevices
-                    width: 30
-                    btnIcon: "qrc:/icons/house.svg"
-                    anchors.top: parent.top
+                ColumnLayout {
+                    anchors.fill: parent
                     anchors.topMargin: 20
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    onClicked: swipeView.setCurrentIndex(0)
-
-                }
-
-                SceLeftMenuButton {
-                    id: buttonSettings
-                    width: 30
-                    btnIcon: "qrc:/icons/gear.svg"
-                    anchors.bottom: buttonTest.top
-                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottomMargin: 20
-                    onClicked: swipeView.setCurrentIndex(1)
+                    spacing: 10
+
+                    SceLeftMenuButton {
+                        Layout.preferredWidth: 30
+                        id: buttonDevices
+                        btnIcon: "qrc:/icons/house.svg"
+                        onClicked: swipeView.setCurrentIndex(0)
+
+                    }
+
+                    Item {
+                        Layout.fillHeight: true
+                    }
+
+                    SceLeftMenuButton {
+                        Layout.preferredWidth: 30
+                        id: buttonSettings
+                        btnIcon: "qrc:/icons/gear.svg"
+                        onClicked: swipeView.setCurrentIndex(1)
+                    }
+
+
+                    SceLeftMenuButton {
+                        Layout.preferredWidth: 30
+                        id: buttonTest
+                        btnIcon: "qrc:/icons/terminal.svg"
+                        onClicked: swipeView.setCurrentIndex(2)
+                    }
 
                 }
 
 
-                SceLeftMenuButton {
-                    id: buttonTest
-                    width: 30
-                    btnIcon: "qrc:/icons/terminal.svg"
-                    anchors.bottom: parent.bottom
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.bottomMargin: 20
-                    onClicked: swipeView.setCurrentIndex(2)
-
-                }
 
             }
         }

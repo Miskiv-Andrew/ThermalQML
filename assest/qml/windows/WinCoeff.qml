@@ -103,19 +103,23 @@ Item {
                             focusPolicy: Qt.ClickFocus
                         }
 
-                        Button {
-                            id: buttonWriteThermalCoef
-                            text: qsTr("Зчитати")
-                            font.family: "Arial"
+
+                        RoundButton {
+                            Layout.preferredWidth: 120
+                            display: AbstractButton.TextBesideIcon
+                            icon.source: "qrc:/icons/chevron-bar-expand.svg"
+                            text: "Зчитати"
                             font.pointSize: 12
                         }
 
-                        Button {
-                            id: buttonReadThermalCoef
-                            text: qsTr("Зашити")
-                            font.family: "Arial"
+                        RoundButton {
+                            Layout.preferredWidth: 120
+                            display: AbstractButton.TextBesideIcon
+                            icon.source: "qrc:/icons/chevron-bar-contract.svg"
+                            text: "Зашити"
                             font.pointSize: 12
                         }
+
                     }
                 }
 
