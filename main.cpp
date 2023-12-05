@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QApplication>
 #include <QQmlContext>
+#include <QFontDatabase>
 
 #include "backend/dispatcher.h"
 #include "backend/filemanager.h"
@@ -13,6 +14,21 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv); //Here etc..
     app.setWindowIcon(QIcon(":/icons/win-icon.png"));
+
+    //Update same font for all app
+    int fontId = QFontDatabase::addApplicationFont(":/Fonts/GigaSans/GigaSans-Medium.ttf");
+
+    if (fontId != -1) {
+        QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
+
+        if (!fontFamilies.isEmpty()) {
+            QString fontFamily = fontFamilies.at(0);
+
+            // Установка шрифта для приложения
+            QFont appFont(fontFamily);
+            app.setFont(appFont);
+        }
+    }
 
     //qmlRegisterType<dispatcher>("WinHeater", 1, 0, "disp");
 

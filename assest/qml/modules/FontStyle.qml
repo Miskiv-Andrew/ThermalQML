@@ -19,21 +19,21 @@ Item {
     readonly property string ppThinItalic:          ppThinItalicFont.name
 
 
-    FontLoader{ id: ppBlackItalicFont;      source: "qrc:/Fonts/Poppins-BlackItalic.ttf" }
-    FontLoader{ id: ppBoldFont;             source: "qrc:/Fonts/Poppins-Bold.ttf" }
-    FontLoader{ id: ppExtraBoldFont;        source: "qrc:/Fonts/Poppins-ExtraBold.ttf" }
-    FontLoader{ id: ppExtraBoldItalicFont;  source: "qrc:/Fonts/Poppins-ExtraBoldItalic.ttf" }
-    FontLoader{ id: ppExtraLightFont;       source: "qrc:/Fonts/Poppins-ExtraLight.ttf" }
-    FontLoader{ id: ppExtraLightItalicFont; source: "qrc:/Fonts/Poppins-ExtraLightItalic.ttf" }
-    FontLoader{ id: ppItalicFont;           source: "qrc:/Fonts/Poppins-Italic.ttf" }
-    FontLoader{ id: ppLightFont;            source: "qrc:/Fonts/Poppins-Light.ttf" }
-    FontLoader{ id: ppMediumFont;           source: "qrc:/Fonts/Poppins-Medium.ttf" }
-    FontLoader{ id: ppMediumItalicFont;     source: "qrc:/Fonts/Poppins-MediumItalic.ttf" }
-    FontLoader{ id: ppRegularFont;          source: "qrc:/Fonts/Poppins-Regular.ttf" }
-    FontLoader{ id: ppSemiBoldFont;         source: "qrc:/Fonts/Poppins-SemiBold.ttf" }
-    FontLoader{ id: ppSemiBoldItalicFont;   source: "qrc:/Fonts/Poppins-SemiBoldItalic.ttf" }
-    FontLoader{ id: ppThinFont;             source: "qrc:/Fonts/Poppins-Thin.ttf" }
-    FontLoader{ id: ppThinItalicFont;       source: "qrc:/Fonts/Poppins-ThinItalic.ttf" }
+    FontLoader{ id: ppBlackItalicFont;      source: "qrc:/Fonts/Poppins/Poppins-BlackItalic.ttf" }
+    FontLoader{ id: ppBoldFont;             source: "qrc:/Fonts/Poppins/Poppins-Bold.ttf" }
+    FontLoader{ id: ppExtraBoldFont;        source: "qrc:/Fonts/Poppins/Poppins-ExtraBold.ttf" }
+    FontLoader{ id: ppExtraBoldItalicFont;  source: "qrc:/Fonts/Poppins/Poppins-ExtraBoldItalic.ttf" }
+    FontLoader{ id: ppExtraLightFont;       source: "qrc:/Fonts/Poppins/Poppins-ExtraLight.ttf" }
+    FontLoader{ id: ppExtraLightItalicFont; source: "qrc:/Fonts/Poppins/Poppins-ExtraLightItalic.ttf" }
+    FontLoader{ id: ppItalicFont;           source: "qrc:/Fonts/Poppins/Poppins-Italic.ttf" }
+    FontLoader{ id: ppLightFont;            source: "qrc:/Fonts/Poppins/Poppins-Light.ttf" }
+    FontLoader{ id: ppMediumFont;           source: "qrc:/Fonts/Poppins/Poppins-Medium.ttf" }
+    FontLoader{ id: ppMediumItalicFont;     source: "qrc:/Fonts/Poppins/Poppins-MediumItalic.ttf" }
+    FontLoader{ id: ppRegularFont;          source: "qrc:/Fonts/Poppins/Poppins-Regular.ttf" }
+    FontLoader{ id: ppSemiBoldFont;         source: "qrc:/Fonts/Poppins/Poppins-SemiBold.ttf" }
+    FontLoader{ id: ppSemiBoldItalicFont;   source: "qrc:/Fonts/Poppins/Poppins-SemiBoldItalic.ttf" }
+    FontLoader{ id: ppThinFont;             source: "qrc:/Fonts/Poppins/Poppins-Thin.ttf" }
+    FontLoader{ id: ppThinItalicFont;       source: "qrc:/Fonts/Poppins/Poppins-ThinItalic.ttf" }
 
 
 }

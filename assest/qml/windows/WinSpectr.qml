@@ -5,15 +5,16 @@ import Qt5Compat.GraphicalEffects
 import Qt.labs.qmlmodels 1.0
 import QtCharts 6.3
 
+//---Styles
+import "./modules/StyleParameters.qml" as Stl
+
 Item {
-    visible: true
-    width: 1200
-    height: 500
 
     property real leftBoundry:  0
     property real rightBoundry: 2048
 
-    function updateSpectrum(path){
+
+    function updateSpectrum(path) {
         //updating chart and adjust size in c++
         ssContext.updateFromFile(spectrumChart.series(0), path)
         //ssContext.updateFromFile(spectrumChart.series(1), path)
@@ -71,32 +72,31 @@ Item {
 
                     RowLayout {
                         anchors.fill: parent
-                        anchors.margins: 10
+                        anchors.margins: 0
 
                         Switch {
                             id: switchStartStopSpectr
                             text: qsTr("Почати накопичення")
-                            font.pointSize: 12
-                            font.family: "Arial"
+                            font.pointSize: Stl.sFontSize
                         }
 
                         Switch {
                             id: switchLogarifmSpect
                             text: qsTr("Логарифмічна шкала")
-                            font.pointSize: 12
-                            font.family: "Arial"
+                            font.pointSize: Stl.sFontSize
                         }
 
                         Item {
-                           Layout.fillWidth: true
+                            Layout.fillWidth: true
                         }
 
-                        RoundButton {
-                            Layout.preferredWidth: 120
+                        Button {
+                            Layout.preferredWidth: Stl.buttonWidth
+                            Layout.preferredHeight: Stl.buttonHeight
                             display: AbstractButton.TextBesideIcon
                             icon.source: "qrc:/icons/eraser.svg"
                             text: "Очистити"
-                            font.pointSize: 12
+                            font.pointSize: Stl.sFontSize
                             onClicked: spectrumSeries.clear()
                         }
                     }
@@ -116,14 +116,18 @@ Item {
                         antialiasing: false
                         legend.visible: false
 
+
                         ValueAxis {
                             id: valueAxisX
                             labelFormat: "%.0f"
+                            labelsFont:Qt.font({pointSize: Stl.sFontSize})
                         }
 
                         ValueAxis {
                             id: valueAxisY
                             labelFormat: "%.0f"
+                            //font.pointSize: fontSize - 4
+                            labelsFont:Qt.font({pointSize: Stl.sFontSize})
                         }
 
                         LineSeries {
@@ -146,7 +150,7 @@ Item {
                                   '<p> 00.00 мкЗв/год  </p>' +
                                   '<p> 00.00 °C  </p>'
                             anchors.fill: parent
-                            font.pixelSize: 14
+                            font.pixelSize: Stl.bFontSize
                             horizontalAlignment: Text.AlignRight
                             anchors.margins: 50
                         }
@@ -182,7 +186,10 @@ Item {
                                     id: mcText
                                     horizontalAlignment: Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
+                                    font.pointSize: Stl.sFontSize
                                     text: ""
+
+
                                 }
                             }
                         }
@@ -214,7 +221,9 @@ Item {
                                         anchors.fill: parent
                                         horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
+                                        font.pointSize: Stl.sFontSize
                                         text: ""
+
                                     }
                                 }
                             }
@@ -241,7 +250,9 @@ Item {
                                         id: hcText
                                         horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
+                                        font.pointSize: Stl.sFontSize
                                         text: ""
+
                                     }
                                 }
                             }
@@ -411,9 +422,9 @@ Item {
                             //width: spectrumChart.plotArea.width
                             //anchors.horizontalCenter: parent.horizontalCenter
                             anchors.bottom: parent.bottom
-                            anchors.rightMargin: 40
-                            anchors.leftMargin: 40
-                            anchors.bottomMargin: 5
+                            anchors.rightMargin: 20
+                            anchors.leftMargin: 20
+                            anchors.bottomMargin: -10
                             from: 0
                             to: 2048
 

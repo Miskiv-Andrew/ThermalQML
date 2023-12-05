@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls.Material
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 
@@ -11,6 +11,19 @@ Window {
     height: 400
     visible: true
 
+    //sizes
+    property real bFontSize: 18
+    property real mFontSize: 14
+    property real sFontSize: 10
+
+    property real btnHeight: 40
+    property real btnWidth: 150
+    property real btnFontSize: 180
+
+    property real radiusCommon: 10
+    property real marginCommon: 10
+
+    //internal params
     property double previosTemperature: 0
     property double currentTemperature: 0
     property double targetTemperature: 0
@@ -23,7 +36,6 @@ Window {
     property int timeLeft: 600
     property int timePassed: 600
 
-    property int fontSize: 14
 
     Connections {
         target: disp
@@ -152,7 +164,7 @@ Window {
                                     text: qsTr("Підключення до пічки")
                                     anchors.fill: parent
                                     font.family: "Poppins"
-                                    font.pointSize: fontSize
+                                    font.pointSize: mFontSize
                                     onClicked: f.connectFurnace(switchFurnaceConncet.state)
                                 }
                             }
@@ -207,8 +219,7 @@ Window {
                                     id: switchControllSystem
                                     anchors.fill: parent
                                     text: "Система контролю"
-                                    font.family: "Poppins"
-                                    font.pointSize: fontSize
+                                    font.pointSize: mFontSize
                                     onClicked: f.activateControllSysyem(switchControllSystem.state)
                                 }
                             }
@@ -223,8 +234,7 @@ Window {
                                     text: qsTr("Цільова темепратура: -- / Поточна температура: --")
                                     horizontalAlignment: Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
-                                    font.family: "Poppins"
-                                    font.pointSize: fontSize
+                                    font.pointSize: mFontSize
                                 }
                             }
                         }
@@ -237,10 +247,8 @@ Window {
 
                         TextArea {
                             id: textAreaLog
-                            selectedTextColor: "#ffffff"
-                            font.family: "Poppins"
-                            font.pointSize: 12 // Adjust the height as neededs
-                            background: Rectangle { color: "#00000000"; border.width: 1; border.color: "#e0e0e0"; radius: 10 }
+                            font.pointSize: mFontSize // Adjust the height as neededs
+                            //background: Rectangle { color: "#00000000"; border.width: 1; border.color: "#e0e0e0"; radius: 10 }
 
                         }
                     }

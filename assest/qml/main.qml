@@ -1,15 +1,19 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 import QtCharts 6.3
 import Qt.labs.qmlmodels 1.0
 import QtQuick.Dialogs
 
+//---Styles
+import "./modules/StyleParameters.qml" as Stl
+
 //---User Module Includes
 import "modules"
 import "windows"
 import "scripts"
+import "pages"
 
 ApplicationWindow  {
     id: app
@@ -19,9 +23,15 @@ ApplicationWindow  {
     color: "#00000000"
     title: qsTr("UTC")
 
+    Material.accent: Material.DeepOrange
+
     menuBar: MenuBar {
+
+        font.pointSize: Stl.sFontSize
+
         Menu {
             title: qsTr("&Файл")
+            font.pointSize: sFontSize
             Action { text: qsTr("Відкрити спектр")
                 onTriggered: { fileDialog.open() }
             }
@@ -30,6 +40,7 @@ ApplicationWindow  {
         }
         Menu {
             title: qsTr("&Управління")
+            font.pointSize: Stl.sFontSize
             Action { text: qsTr("Пічка")
                 onTriggered: { manualHeater.show()  }
             }
@@ -37,12 +48,14 @@ ApplicationWindow  {
         }
         Menu {
             title: qsTr("&Вигляд")
+            font.pointSize: Stl.sFontSize
             CheckBox { text: qsTr("Список девайсів"); onClicked: { WinDevlist.visible = checked; } }
             CheckBox { text: qsTr("Вікно спектра"); onClicked: { WinSpectr.visible = checked; } }
             CheckBox { text: qsTr("Вікно коефіціентів"); onClicked: { WinCoeff.visible = checked; } }
         }
         Menu {
             title: qsTr("&Справка")
+            font.pointSize: Stl.sFontSize
             Action { text: qsTr("&About") }
         }
 
@@ -54,7 +67,7 @@ ApplicationWindow  {
         onAccepted: {
             var filePath = fileDialog.selectedFile.toString().replace("file:///",'')
             console.log("You chose: " + filePath)
-            itemSpectr.updateSpectrum(filePath)
+            pageDevices.itemSpecrumAlias.updateSpectrum(filePath)
         }
         onRejected: {
             console.log("Canceled")
@@ -64,8 +77,10 @@ ApplicationWindow  {
     WinHeater{
         //additional window of manual controll of heater
         id: manualHeater
+        Material.accent: Material.DeepOrange
         visible: false;
     }
+
 
     // INTERNAL FUNCTIONS
     WindowControlScript {
@@ -102,160 +117,20 @@ ApplicationWindow  {
                 anchors.leftMargin: 0
                 currentIndex: 0
                 onCurrentIndexChanged: {
-                    buttonDevices.activeMenu = !currentIndex
-                    buttonSettings.activeMenu = currentIndex
+                    leftMenuBtnDev.checked = !currentIndex
+                    leftMenuBtnSett.checked = currentIndex
                 }
 
-                Page {
+                PageDevice {
                     id: pageDevices
-
-                    Rectangle {
-                        id: rectangleDevices
-                        color: "#dbdcdc"
-                        anchors.fill: parent
-
-                        ScrollView {
-                            id: scrollViewDevices
-                            anchors.fill: parent
-                            padding: 0
-                            rightPadding: 10
-                            bottomPadding: 10
-                            leftPadding: 10
-                            topPadding: 10
-
-                            WinDevlist {
-                                id: rectangleDevList
-                                width: app.width*0.2
-                                anchors.top: parent.top
-                                anchors.bottom: parent.bottom
-                                anchors.topMargin: 10
-                                anchors.bottomMargin: 10
-                            }
-
-                            SceSpitter{
-                                id: splitter2
-                                elementParent: parent
-                                verticalOrientation: true
-                                element1: rectangleDevList
-                                element2: rectangleAdditional
-                            }
-
-                            Rectangle {
-                                id: rectangleAdditional
-                                color: "#00000000"
-                                border.width: 0
-                                anchors.left: rectangleDevList.right
-                                anchors.right: parent.right
-                                anchors.top: parent.top
-                                anchors.bottom: parent.bottom
-                                anchors.margins: 10
-
-
-                                WinSpectr{
-                                    id: itemSpectr
-                                    width: parent.width
-                                    height: parent.height * 0.7
-                                    anchors.bottomMargin: 10
-                                }
-
-                                SceSpitter{
-                                    id: splitter1
-                                    elementParent: parent
-                                    element1: itemSpectr
-                                    element2: itemCoeff
-                                }
-
-                                WinCoeff{
-                                    id: itemCoeff
-                                    width: parent.width
-                                    height: parent.height - itemSpectr.height - splitter1.height
-                                    anchors.top: splitter1.bottom
-                                    anchors.topMargin: 0
-                                }
-
-                            }
-                        }
-                    }
-
                 }
 
-                Page {
+                PageSettings{
                     id: pageSettings
-
-                    Rectangle {
-                        id: rectangleSettings
-                        color: "#dbdcdc"
-                        anchors.fill: parent
-
-                        ScrollView {
-                            id: scrollViewSettings
-                            anchors.fill: parent
-
-                            Rectangle {
-                                id: rectangleSettingsContent
-                                color: "#fafafa"
-                                radius: 10
-                                border.width: 0
-                                anchors.fill: parent
-                                anchors.rightMargin: 20
-                                anchors.leftMargin: 20
-                                anchors.bottomMargin: 20
-                                anchors.topMargin: 20
-                                layer.enabled: true
-                                layer.effect: DropShadow {
-                                    color: "#a3676767"
-                                    transparentBorder: true
-                                    horizontalOffset: 2
-                                    verticalOffset: 4
-                                    radius: 4
-
-                                }
-                            }
-                        }
-                    }
-
                 }
 
-                Page {
+                PageTest {
                     id: pageTest
-
-                    Rectangle {
-                        id: rectangleTest
-                        color: "#dbdcdc"
-                        anchors.fill: parent
-
-                        ScrollView {
-                            id: scrollViewTest
-                            anchors.fill: parent
-
-                            Rectangle {
-                                id: rectangleTestContent
-                                color: "#fafafa"
-                                radius: 10
-                                border.width: 0
-                                anchors.fill: parent
-                                anchors.rightMargin: 20
-                                anchors.leftMargin: 20
-                                anchors.bottomMargin: 20
-                                anchors.topMargin: 20
-                                layer.enabled: true
-                                layer.effect: DropShadow {
-                                    color: "#a3676767"
-                                    transparentBorder: true
-                                    horizontalOffset: 2
-                                    verticalOffset: 4
-                                    radius: 4
-
-                                    Test{
-                                        id: testWindow
-                                        anchors.fill: parent
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-
                 }
 
             }
@@ -271,7 +146,7 @@ ApplicationWindow  {
 
             Rectangle {
                 id: leftMenuFrame
-                width: 30
+                width: 40
                 color: "#dbdcdb"
                 anchors.left: parent.left
                 anchors.top: parent.top
@@ -281,42 +156,48 @@ ApplicationWindow  {
                     anchors.fill: parent
                     anchors.topMargin: 20
                     anchors.bottomMargin: 20
+                    anchors.leftMargin: -10
                     spacing: 10
 
-                    SceLeftMenuButton {
-                        Layout.preferredWidth: 30
-                        id: buttonDevices
-                        btnIcon: "qrc:/icons/house.svg"
+                    Button {
+                        id: leftMenuBtnDev
+                        display: AbstractButton.TextBesideIcon
+                        icon.source: "qrc:/icons/house.svg"
+                        width: 10
+                        checkable: true
+                        autoExclusive: true
+                        flat: true
                         onClicked: swipeView.setCurrentIndex(0)
-
                     }
 
                     Item {
                         Layout.fillHeight: true
                     }
 
-                    SceLeftMenuButton {
-                        Layout.preferredWidth: 30
-                        id: buttonSettings
-                        btnIcon: "qrc:/icons/gear.svg"
+                    Button {
+                        id: leftMenuBtnSett
+                        display: AbstractButton.TextBesideIcon
+                        icon.source: "qrc:/icons/gear.svg"
+                        width: 10
+                        checkable: true
+                        autoExclusive: true
+                        flat: true
                         onClicked: swipeView.setCurrentIndex(1)
                     }
 
-
-                    SceLeftMenuButton {
-                        Layout.preferredWidth: 30
-                        id: buttonTest
-                        btnIcon: "qrc:/icons/terminal.svg"
+                    Button {
+                        id: leftMenuBtnTest
+                        display: AbstractButton.TextBesideIcon
+                        icon.source: "qrc:/icons/terminal.svg"
+                        width: 10
+                        checkable: true
+                        autoExclusive: true
+                        flat: true
                         onClicked: swipeView.setCurrentIndex(2)
                     }
-
                 }
-
-
-
             }
         }
-
     }
 }
 

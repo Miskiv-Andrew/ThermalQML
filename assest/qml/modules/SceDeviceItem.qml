@@ -5,29 +5,35 @@ import QtQuick.Layouts
 
 Item {
     width: parent.width
-    height: 50
+    height: 60
+
+    //sizes
+    property real bFontSize: 18
+    property real mFontSize: 14
+    property real sFontSize: 10
+
+    property real btnHeight: 40
+    property real btnWidth: 180
+    property real btnFontSize: 180
+
+    property real radiusCommon: 10
+    property real marginCommon: 10
 
     Menu {
         id: actionMenu
         x: actionBtn.x + actionBtn.width
         y: actionBtn.y + actionBtn.height
 
-        font.family: "Poppins Medium"
-        font.pixelSize: 14
-
+        font.pointSize: sFontSize
 
         MenuItem {
             text: qsTr("Підключити")
             onTriggered: zoomIn()
         }
-
         MenuSeparator {}
-
         Menu {
             title: "Додатково.."
-
-            font.family: "Poppins Medium"
-            font.pixelSize: 14
+            font.pointSize: sFontSize
 
             MenuItem {
                 text: qsTr("Видалити")
@@ -52,23 +58,24 @@ Item {
                 Layout.fillWidth: true
                 id: deviceName
                 text: deviceNameStr
-                font.italic: true
-                font.family: "Poppins Medium"
+                font.pixelSize: mFontSize
             }
 
-            RoundButton {
+            Button {
                 Layout.rowSpan: 2
                 id: actionBtn
-                radius: 10
-                text: "..."
+                display: AbstractButton.TextBesideIcon
+                icon.source: "qrc:/icons/three-dots.svg"
                 onClicked: actionMenu.open()
+                flat: true
             }
 
             Text {
                 Layout.fillWidth: true
                 id: comPortName
                 text: comPortNameStr
-                font.family: "Poppins Light"
+                font.pixelSize: sFontSize
+                font.italic: true
             }
         }
 

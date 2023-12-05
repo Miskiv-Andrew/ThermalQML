@@ -7,9 +7,21 @@ import QtQuick.Layouts
 import QRegType 1.0
 
 Item {
-    visible: true
-    width: 600
-    height: 300
+
+    //sizes
+    property real bFontSize: 18
+    property real mFontSize: 14
+    property real sFontSize: 10
+
+    property real btnHeight: 40
+    property real btnWidth: 150
+    property real btnFontSize: 180
+
+    property real radiusCommon: 10
+    property real marginCommon: 10
+
+    property real leftBoundry:  0
+    property real rightBoundry: 2048
 
     Connections {
         target: TableViewContext
@@ -92,32 +104,33 @@ Item {
 
                     RowLayout {
                         anchors.fill: parent
-                        anchors.margins: 10
+                        anchors.margins: 0
 
                         CheckBox {
                             Layout.fillWidth: true
                             id: checkThermalCompOnOff
                             text: qsTr("Термокомпенсація")
-                            font.pointSize: 12
-                            font.family: "Arial"
+                            font.pointSize: sFontSize
                             focusPolicy: Qt.ClickFocus
                         }
 
 
-                        RoundButton {
-                            Layout.preferredWidth: 120
+                        Button {
+                            Layout.preferredWidth: btnWidth
+                            Layout.maximumHeight: btnHeight
                             display: AbstractButton.TextBesideIcon
                             icon.source: "qrc:/icons/chevron-bar-expand.svg"
                             text: "Зчитати"
-                            font.pointSize: 12
+                            font.pointSize: sFontSize
                         }
 
-                        RoundButton {
-                            Layout.preferredWidth: 120
+                        Button {
+                            Layout.preferredWidth: btnWidth
+                            Layout.maximumHeight: btnHeight
                             display: AbstractButton.TextBesideIcon
                             icon.source: "qrc:/icons/chevron-bar-contract.svg"
                             text: "Зашити"
-                            font.pointSize: 12
+                            font.pointSize: sFontSize
                         }
 
                     }
@@ -158,6 +171,7 @@ Item {
                                     Text {
                                         anchors.centerIn: parent
                                         text: model.headerText  // Use modelData to display the header text
+                                        font.pointSize: sFontSize
                                     }
                                 }
                             }
@@ -179,6 +193,8 @@ Item {
                             rowSpacing: param.tableRowSpacing
                             clip: true
 
+
+
                             model: CoeffTableModel {
                                 id: tableModel
                             }
@@ -196,6 +212,7 @@ Item {
                                     anchors.fill: parent
                                     horizontalAlignment: TextEdit.AlignHCenter
                                     verticalAlignment: TextEdit.AlignVCenter
+                                    font.pointSize: sFontSize
                                     validator: DoubleValidator {
                                         top: 10000.00;
                                         bottom: -100.00;
