@@ -46,18 +46,6 @@ ApplicationWindow  {
             }
 
         }
-        Menu {
-            title: qsTr("&Вигляд")
-            font.pointSize: Stl.Font.small
-            CheckBox { text: qsTr("Список девайсів"); onClicked: { WinDevlist.visible = checked; } }
-            CheckBox { text: qsTr("Вікно спектра"); onClicked: { WinSpectr.visible = checked; } }
-            CheckBox { text: qsTr("Вікно коефіціентів"); onClicked: { WinCoeff.visible = checked; } }
-        }
-        Menu {
-            title: qsTr("&Справка")
-            font.pointSize: Stl.Font.small
-            Action { text: qsTr("&About") }
-        }
 
     }
 
@@ -67,7 +55,6 @@ ApplicationWindow  {
         onAccepted: {
             var filePath = fileDialog.selectedFile.toString().replace("file:///",'')
             console.log("You chose: " + filePath)
-            pageDevices.itemSpecrumAlias.updateSpectrum(filePath)
         }
         onRejected: {
             console.log("Canceled")

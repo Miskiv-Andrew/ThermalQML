@@ -4,8 +4,6 @@ import Qt5Compat.GraphicalEffects
 import Qt.labs.qmlmodels 1.0
 import QtQuick.Layouts
 
-import QRegType 1.0
-
 //---Styles
 import "../styles/Style.js" as Stl
 
@@ -13,37 +11,6 @@ Item {
 
     property real leftBoundry:  0
     property real rightBoundry: 2048
-
-    Connections {
-        target: TableViewContext
-
-        function onHeaderDataModified(data) {
-            // Clear the existing items in the tableColums model
-            param.headerModel.clear();
-            param.tableColums = data.length;
-
-            // Populate the tableColums model with data from headerData
-            for (var i = 0; i < data.length; i++) {
-                param.headerModel.append({ "headerText": data[i] });
-            }
-        }
-
-    }
-
-    Component.onCompleted: {
-        console.log("headerData length: " + TableViewContext.headerData.length);
-
-        // Clear the existing items in the tableColums model
-        param.headerModel.clear();
-
-        // Populate the tableColums model with data from headerData
-        for (var i = 0; i < TableViewContext.headerData.length; i++) {
-            param.headerModel.append({ "headerText": TableViewContext.headerData[i] });
-        }
-
-        console.log(param.headerModel);  // Verify that tableColums is populated
-    }
-
 
     Item {
         id: param
@@ -186,9 +153,9 @@ Item {
 
 
 
-                            model: CoeffTableModel {
-                                id: tableModel
-                            }
+                            //model: CoeffTableModel {
+                            //    id: tableModel
+                            //}
 
                             delegate: Rectangle {
                                 implicitWidth: ((param.tableWidth/param.tableColums))
@@ -227,9 +194,7 @@ Item {
                                     }
                                 }
                             }
-
                         }
-
                     }
                 }
             }

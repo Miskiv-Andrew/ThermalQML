@@ -27,26 +27,6 @@ Window {
     property int timeLeft: 600
     property int timePassed: 600
 
-
-    Connections {
-        target: disp
-
-        function onSend_qml_1_param(data) {
-            var currentTime = new Date();
-            var formattedTime = currentTime.toLocaleTimeString(); // Форматируйте время, как вам нужно
-            var message = formattedTime + data;
-            textAreaLog.append(message);
-        }
-
-        function onSend_qml_2_param(data, temp) {
-            var currentTime = new Date();
-            var formattedTime = currentTime.toLocaleTimeString(); // Форматируйте время, как вам нужно
-            var message = formattedTime + data;
-            textAreaLog.append(message);
-            currentTemp.text = temp;
-        }
-    }
-
     // Timer for update temperature lable
     Timer {
         id: updateTempLable
@@ -57,32 +37,6 @@ Window {
         onTriggered: {
             temperatureLable.text = `Цільова темепратура: ${targetTemperature} / Поточна температура: ${currentTemperature}`
         }
-    }
-
-    QtObject{
-        id: f
-
-        function connectFurnace(state){
-
-            if(state){
-                disp.qml_rec_order_heater(5, 0.0)
-            }
-            else{
-                disp.qml_rec_order_heater(3, 0.0)
-            }
-
-        }
-
-        function activateControllSysyem(state){
-
-            if(state){
-                disp.qml_rec_order_heater(2, 0.0);
-            }
-            else{
-                disp.qml_rec_order_heater(3, 0.0);
-            }
-        }
-
     }
 
     Rectangle {
@@ -155,7 +109,7 @@ Window {
                                     text: qsTr("Підключення до пічки")
                                     anchors.fill: parent
                                     font.pointSize: Stl.Font.medium
-                                    onClicked: f.connectFurnace(switchFurnaceConncet.state)
+                                    onClicked: {}
                                 }
                             }
 
@@ -184,7 +138,7 @@ Window {
                                         onTriggered: {
                                             targetTemperature = sliderTemp.value.toFixed(2)
                                             // Send your temperature change command here
-                                            disp.qml_rec_order_heater(4, targetTemperature)
+
                                             console.log("Temperature command sent:", targetTemperature)
                                             //hide highlight when command accepted
                                             sliderTemp.highlight.visible = false
@@ -210,7 +164,7 @@ Window {
                                     anchors.fill: parent
                                     text: "Система контролю"
                                     font.pointSize: Stl.Font.medium
-                                    onClicked: f.activateControllSysyem(switchControllSystem.state)
+                                    onClicked: {}
                                 }
                             }
 
@@ -238,7 +192,6 @@ Window {
                         TextArea {
                             id: textAreaLog
                             font.pointSize: Stl.Font.medium
-                            //background: Rectangle { color: "#00000000"; border.width: 1; border.color: "#e0e0e0"; radius: 10 }
 
                         }
                     }

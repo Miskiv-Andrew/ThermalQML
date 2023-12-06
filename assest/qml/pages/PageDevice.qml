@@ -10,15 +10,6 @@ import "../windows"
 
 Page {
 
-    //sizes
-    property real fontSize: 14
-
-    property real buttonHeight: 40
-    property real buttonWidth: 180
-
-    property real radiusCont: 10
-    property real marginCont: 10
-
     property alias itemSpecrumAlias: itemSpectr
 
     Rectangle {
