@@ -2027,6 +2027,6 @@
         <file>qml/pages/PageSettings.qml</file>
         <file>qml/pages/PageTest.qml</file>
         <file>qml/windows/WinLogin.qml</file>
-        <file>qml/modules/StyleParameters.qml</file>
+        <file>qml/styles/Style.js</file>
     </qresource>
 </RCC>

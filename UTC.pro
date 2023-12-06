@@ -33,6 +33,10 @@ DISTFILES += \
     assest/qml/modules/SceSlider.qml \
     assest/qml/modules/SceSpitter.qml \
     assest/qml/modules/SceTopBarButton.qml \
+    assest/qml/modules/StyleParameters.qml \
+    assest/qml/pages/PageDevice.qml \
+    assest/qml/pages/PageSettings.qml \
+    assest/qml/pages/PageTest.qml \
     assest/qml/scripts/SpectrumControlScript.qml \
     assest/qml/scripts/WindowControlScript.qml \
     assest/qml/windows/Test.qml \

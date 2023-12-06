@@ -7,7 +7,7 @@ import Qt.labs.qmlmodels 1.0
 import QtQuick.Dialogs
 
 //---Styles
-import "./modules/StyleParameters.qml" as Stl
+import "./styles/Style.js" as Stl
 
 //---User Module Includes
 import "modules"
@@ -27,11 +27,11 @@ ApplicationWindow  {
 
     menuBar: MenuBar {
 
-        font.pointSize: Stl.sFontSize
+        font.pointSize: Stl.Font.small
 
         Menu {
             title: qsTr("&Файл")
-            font.pointSize: sFontSize
+            font.pointSize: Stl.Font.small
             Action { text: qsTr("Відкрити спектр")
                 onTriggered: { fileDialog.open() }
             }
@@ -40,22 +40,22 @@ ApplicationWindow  {
         }
         Menu {
             title: qsTr("&Управління")
-            font.pointSize: Stl.sFontSize
+            font.pointSize: Stl.Font.small
             Action { text: qsTr("Пічка")
-                onTriggered: { manualHeater.show()  }
+                onTriggered: { manualHeater.show() }
             }
 
         }
         Menu {
             title: qsTr("&Вигляд")
-            font.pointSize: Stl.sFontSize
+            font.pointSize: Stl.Font.small
             CheckBox { text: qsTr("Список девайсів"); onClicked: { WinDevlist.visible = checked; } }
             CheckBox { text: qsTr("Вікно спектра"); onClicked: { WinSpectr.visible = checked; } }
             CheckBox { text: qsTr("Вікно коефіціентів"); onClicked: { WinCoeff.visible = checked; } }
         }
         Menu {
             title: qsTr("&Справка")
-            font.pointSize: Stl.sFontSize
+            font.pointSize: Stl.Font.small
             Action { text: qsTr("&About") }
         }
 

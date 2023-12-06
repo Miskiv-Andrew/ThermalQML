@@ -3,6 +3,9 @@ import QtQuick.Controls.Material
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 
+//---Styles
+import "../styles/Style.js" as Stl
+
 import "../modules"
 
 Window {
@@ -10,18 +13,6 @@ Window {
     width: 1200
     height: 400
     visible: true
-
-    //sizes
-    property real bFontSize: 18
-    property real mFontSize: 14
-    property real sFontSize: 10
-
-    property real btnHeight: 40
-    property real btnWidth: 150
-    property real btnFontSize: 180
-
-    property real radiusCommon: 10
-    property real marginCommon: 10
 
     //internal params
     property double previosTemperature: 0
@@ -163,8 +154,7 @@ Window {
                                     id: switchFurnaceConncet
                                     text: qsTr("Підключення до пічки")
                                     anchors.fill: parent
-                                    font.family: "Poppins"
-                                    font.pointSize: mFontSize
+                                    font.pointSize: Stl.Font.medium
                                     onClicked: f.connectFurnace(switchFurnaceConncet.state)
                                 }
                             }
@@ -219,7 +209,7 @@ Window {
                                     id: switchControllSystem
                                     anchors.fill: parent
                                     text: "Система контролю"
-                                    font.pointSize: mFontSize
+                                    font.pointSize: Stl.Font.medium
                                     onClicked: f.activateControllSysyem(switchControllSystem.state)
                                 }
                             }
@@ -234,7 +224,7 @@ Window {
                                     text: qsTr("Цільова темепратура: -- / Поточна температура: --")
                                     horizontalAlignment: Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
-                                    font.pointSize: mFontSize
+                                    font.pointSize: Stl.Font.medium
                                 }
                             }
                         }
@@ -247,7 +237,7 @@ Window {
 
                         TextArea {
                             id: textAreaLog
-                            font.pointSize: mFontSize // Adjust the height as neededs
+                            font.pointSize: Stl.Font.medium
                             //background: Rectangle { color: "#00000000"; border.width: 1; border.color: "#e0e0e0"; radius: 10 }
 
                         }

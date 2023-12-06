@@ -6,19 +6,10 @@ import QtQuick.Layouts
 
 import QRegType 1.0
 
+//---Styles
+import "../styles/Style.js" as Stl
+
 Item {
-
-    //sizes
-    property real bFontSize: 18
-    property real mFontSize: 14
-    property real sFontSize: 10
-
-    property real btnHeight: 40
-    property real btnWidth: 150
-    property real btnFontSize: 180
-
-    property real radiusCommon: 10
-    property real marginCommon: 10
 
     property real leftBoundry:  0
     property real rightBoundry: 2048
@@ -110,27 +101,27 @@ Item {
                             Layout.fillWidth: true
                             id: checkThermalCompOnOff
                             text: qsTr("Термокомпенсація")
-                            font.pointSize: sFontSize
+                            font.pointSize: Stl.Font.small
                             focusPolicy: Qt.ClickFocus
                         }
 
 
                         Button {
-                            Layout.preferredWidth: btnWidth
-                            Layout.maximumHeight: btnHeight
+                            Layout.preferredWidth: Stl.Btn.Width
+                            Layout.preferredHeight: Stl.Btn.Height
                             display: AbstractButton.TextBesideIcon
                             icon.source: "qrc:/icons/chevron-bar-expand.svg"
                             text: "Зчитати"
-                            font.pointSize: sFontSize
+                            font.pointSize: Stl.Font.small
                         }
 
                         Button {
-                            Layout.preferredWidth: btnWidth
-                            Layout.maximumHeight: btnHeight
+                            Layout.preferredWidth: Stl.Btn.Width
+                            Layout.preferredHeight: Stl.Btn.Height
                             display: AbstractButton.TextBesideIcon
                             icon.source: "qrc:/icons/chevron-bar-contract.svg"
                             text: "Зашити"
-                            font.pointSize: sFontSize
+                            font.pointSize: Stl.Font.small
                         }
 
                     }
@@ -171,7 +162,7 @@ Item {
                                     Text {
                                         anchors.centerIn: parent
                                         text: model.headerText  // Use modelData to display the header text
-                                        font.pointSize: sFontSize
+                                        font.pointSize: Stl.Font.small
                                     }
                                 }
                             }
@@ -212,7 +203,7 @@ Item {
                                     anchors.fill: parent
                                     horizontalAlignment: TextEdit.AlignHCenter
                                     verticalAlignment: TextEdit.AlignVCenter
-                                    font.pointSize: sFontSize
+                                    font.pointSize: Stl.Font.small
                                     validator: DoubleValidator {
                                         top: 10000.00;
                                         bottom: -100.00;

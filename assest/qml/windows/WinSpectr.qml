@@ -6,7 +6,7 @@ import Qt.labs.qmlmodels 1.0
 import QtCharts 6.3
 
 //---Styles
-import "./modules/StyleParameters.qml" as Stl
+import "../styles/Style.js" as Stl
 
 Item {
 
@@ -77,13 +77,13 @@ Item {
                         Switch {
                             id: switchStartStopSpectr
                             text: qsTr("Почати накопичення")
-                            font.pointSize: Stl.sFontSize
+                            font.pointSize: Stl.Font.small
                         }
 
                         Switch {
                             id: switchLogarifmSpect
                             text: qsTr("Логарифмічна шкала")
-                            font.pointSize: Stl.sFontSize
+                            font.pointSize: Stl.Font.small
                         }
 
                         Item {
@@ -91,12 +91,12 @@ Item {
                         }
 
                         Button {
-                            Layout.preferredWidth: Stl.buttonWidth
-                            Layout.preferredHeight: Stl.buttonHeight
+                            Layout.preferredWidth: Stl.Btn.Width
+                            Layout.preferredHeight: Stl.Btn.Height
                             display: AbstractButton.TextBesideIcon
                             icon.source: "qrc:/icons/eraser.svg"
                             text: "Очистити"
-                            font.pointSize: Stl.sFontSize
+                            font.pointSize: Stl.Font.small
                             onClicked: spectrumSeries.clear()
                         }
                     }
@@ -120,14 +120,14 @@ Item {
                         ValueAxis {
                             id: valueAxisX
                             labelFormat: "%.0f"
-                            labelsFont:Qt.font({pointSize: Stl.sFontSize})
+                            labelsFont:Qt.font({pointSize: Stl.Font.small})
                         }
 
                         ValueAxis {
                             id: valueAxisY
                             labelFormat: "%.0f"
                             //font.pointSize: fontSize - 4
-                            labelsFont:Qt.font({pointSize: Stl.sFontSize})
+                            labelsFont:Qt.font({pointSize: Stl.Font.small})
                         }
 
                         LineSeries {
@@ -150,7 +150,7 @@ Item {
                                   '<p> 00.00 мкЗв/год  </p>' +
                                   '<p> 00.00 °C  </p>'
                             anchors.fill: parent
-                            font.pixelSize: Stl.bFontSize
+                            font.pixelSize: Stl.Font.big
                             horizontalAlignment: Text.AlignRight
                             anchors.margins: 50
                         }
@@ -186,7 +186,7 @@ Item {
                                     id: mcText
                                     horizontalAlignment: Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
-                                    font.pointSize: Stl.sFontSize
+                                    font.pointSize: Stl.Font.small
                                     text: ""
 
 
@@ -221,7 +221,7 @@ Item {
                                         anchors.fill: parent
                                         horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
-                                        font.pointSize: Stl.sFontSize
+                                        font.pointSize: Stl.Font.small
                                         text: ""
 
                                     }
@@ -250,7 +250,7 @@ Item {
                                         id: hcText
                                         horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
-                                        font.pointSize: Stl.sFontSize
+                                        font.pointSize: Stl.Font.small
                                         text: ""
 
                                     }
