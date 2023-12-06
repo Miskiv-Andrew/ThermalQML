@@ -44,4 +44,6 @@ DISTFILES += \
     assest/qml/windows/WinHeater.qml \
     assest/qml/windows/WinSpectr.qml
 
-HEADERS +=
+HEADERS += \
+    backend/dispatcher.h \
+    backend/heater.h

@@ -21,8 +21,6 @@ Item {
             horizontalOffset: 2
             verticalOffset: 4
             radius: 4
-
-
         }
 
         Rectangle{

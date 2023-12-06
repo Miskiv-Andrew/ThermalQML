@@ -27,16 +27,17 @@ Window {
     property int timeLeft: 600
     property int timePassed: 600
 
-    // Timer for update temperature lable
-    Timer {
-        id: updateTempLable
-        interval: 2000 // 2 seconds
-        repeat: true
-        running: true
+    Connections {
+        target: dsContext
 
-        onTriggered: {
-            temperatureLable.text = `Цільова темепратура: ${targetTemperature} / Поточна температура: ${currentTemperature}`
+        function onQml_send_text(string){
+            var currentTime = new Date();
+            var formattedTime = currentTime.toLocaleTimeString(); // Форматируйте время, как вам нужно
+            var message = formattedTime + string;
+            textAreaLog.append(message);
         }
+
+
     }
 
     Rectangle {
@@ -53,7 +54,7 @@ Window {
 
             Rectangle {
                 Layout.fillHeight: true
-                Layout.preferredWidth: 300
+                Layout.preferredWidth: 400
                 id: contentList
                 color: "white"
                 radius: 10
@@ -65,6 +66,100 @@ Window {
                     verticalOffset: 4
                     radius: 4
                 }
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 20
+
+                    TextArea {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 50
+                        id: tempListInput
+                        placeholderText: qsTr("Внести список цілових температур")
+
+                        Keys.onReturnPressed: {
+                            var command = []
+
+                            var inputText = tempListInput.text;
+                            inputText = inputText.replace(",", ".");
+                            var temperatureArray = inputText.split(/\s+|\//);
+
+                            command = ["target_temp_list"].concat(temperatureArray);
+                            dsContext.receive_data_from_QML(command)
+
+                            tempList.model.clear();
+                            for (var i = 0; i < temperatureArray.length; ++i) {
+                                tempList.model.append({ temperature: temperatureArray[i] });
+                            }
+
+                            console.log(command);
+                        }
+                    }
+
+                    ListView {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        id: tempList
+
+                        model: ListModel {
+                            ListElement { temperature: "Список температур" }
+                        }
+
+                        delegate: Item {
+                            width: tempList.width
+                            height: 60
+
+                            Menu {
+                                id: actionMenu
+                                x: actionBtn.x + actionBtn.width
+                                y: actionBtn.y + actionBtn.height
+
+                                font.pointSize: Stl.Font.small
+
+                                MenuItem {
+                                    text: qsTr("Видалити")
+                                    onTriggered: { }
+                                }
+
+                            }
+
+                            Rectangle {
+                                id: background
+                                radius: 10
+                                anchors.fill: parent
+                                color: index % 2 == 0 ? "#00000000" : "#e6e6e6"
+
+                                GridLayout {
+                                    anchors.fill: parent
+                                    anchors.margins: 5
+                                    columns: 2
+                                    rows: 1
+
+                                    Text {
+                                        Layout.fillWidth: true
+                                        id: tempItemText
+                                        text: model.temperature
+                                        verticalAlignment: Qt.AlignVCenter
+                                        horizontalAlignment: Qt.AlignHCenter
+                                        font.pixelSize: Stl.Font.medium
+                                    }
+
+                                    Button {
+                                        id: actionBtn
+                                        display: AbstractButton.TextBesideIcon
+                                        icon.source: "qrc:/icons/dash.svg"
+                                        onClicked: actionMenu.open()
+                                        flat: true
+                                    }
+
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+
             }
 
             Rectangle {
@@ -82,7 +177,6 @@ Window {
                     radius: 4
                 }
 
-
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 10
@@ -96,91 +190,97 @@ Window {
                         GridLayout {
                             anchors.fill: parent
                             anchors.margins: 20
-
                             columns: 2
                             rows: 2
 
-                            Item {
-                                Layout.fillHeight: true
-                                Layout.preferredWidth: 300
-
-                                Switch {
-                                    id: switchFurnaceConncet
-                                    text: qsTr("Підключення до пічки")
-                                    anchors.fill: parent
-                                    font.pointSize: Stl.Font.medium
-                                    onClicked: {}
-                                }
-                            }
-
-                            Item {
+                            Switch {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
-
-                                SceSlider {
-                                    id: sliderTemp
-                                    anchors.fill: parent
-                                    anchors.margins: 10
-                                    wheelEnabled: true
-                                    snapMode: RangeSlider.SnapAlways
-                                    stepSize: 0.1
-                                    to: 75
-                                    from: -75
-                                    value: 0
-
-                                    // Timer to handle the delay
-                                    Timer {
-                                        id: delayTimer
-                                        interval: 2000 // 2 seconds
-                                        repeat: false
-                                        running: false
-
-                                        onTriggered: {
-                                            targetTemperature = sliderTemp.value.toFixed(2)
-                                            // Send your temperature change command here
-
-                                            console.log("Temperature command sent:", targetTemperature)
-                                            //hide highlight when command accepted
-                                            sliderTemp.highlight.visible = false
-                                        }
-                                    }
-
-                                    // Handler for slider svalue changes
-                                    onValueChanged: {
-                                        // Restart the timer on every value change
-                                        sliderTemp.highlight.visible = true
-                                        delayTimer.restart()
-                                    }
-                                }
-
-                            }
-
-                            Item {
-                                Layout.fillHeight: true
-                                Layout.preferredWidth: 300
-
-                                Switch {
-                                    id: switchControllSystem
-                                    anchors.fill: parent
-                                    text: "Система контролю"
-                                    font.pointSize: Stl.Font.medium
-                                    onClicked: {}
+                                Layout.row: 0
+                                Layout.column: 0
+                                id: switchFurnaceConncet
+                                text: qsTr("Підключення до пічки")
+                                font.pointSize: Stl.Font.medium
+                                onClicked: {
+                                    var command = []
+                                    switchFurnaceConncet.checked ? command = ["on_control_heater"] : command = ["off_control_heater"]
+                                    dsContext.receive_data_from_QML(command)
+                                    console.log(command)
                                 }
                             }
 
-                            Item {
+                            Switch {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
+                                Layout.row: 1
+                                Layout.column: 0
+                                id: switchControllSystem
+                                text: "Система контролю"
+                                font.pointSize: Stl.Font.medium
+                                onClicked: {
+                                    var command = []
+                                    switchControllSystem.checked ? command = ["connect_heater"] : command = ["disconnect_heater"]
+                                    dsContext.receive_data_from_QML(command)
+                                    console.log(command)
+                                }
+                            }
+
+                            Text {
+                                Layout.fillWidth: true
+                                Layout.row: 0
+                                Layout.column: 1
+                                id: temperatureLable
+                                text: "Поточна температура: " + dsContext.temp
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                font.pointSize: Stl.Font.medium
+                            }
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                Layout.row: 1
+                                Layout.column: 1
+                                spacing: 10
 
                                 Text {
-                                    id: temperatureLable
-                                    anchors.fill: parent
-                                    text: qsTr("Цільова темепратура: -- / Поточна температура: --")
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
+                                    text: "Цільова температура"
                                     font.pointSize: Stl.Font.medium
                                 }
+
+                                Rectangle {
+                                    Layout.preferredWidth: 100
+                                    Layout.fillHeight: true
+                                    border.color: "orange"
+                                    border.width: 1
+                                    radius: 10
+
+                                    TextInput {
+                                        anchors.fill: parent
+                                        id: tagetTempInput
+                                        selectByMouse: true
+                                        horizontalAlignment: TextEdit.AlignHCenter
+                                        verticalAlignment: TextEdit.AlignVCenter
+                                        font.pointSize: Stl.Font.medium
+                                        validator: DoubleValidator {
+                                            top: 99.99;
+                                            bottom: -99.99;
+                                            decimals: 2;
+                                            notation: DoubleValidator.StandardNotation }
+
+                                        Keys.onReturnPressed: {
+                                            var command = []
+                                            tagetTempInput.text = tagetTempInput.text.replace(",", ".")
+                                            command = ["target_temp", tagetTempInput.text.toString()]
+                                            dsContext.receive_data_from_QML(command)
+                                            console.log(command)
+                                        }
+
+                                    }
+                                }
                             }
+
+
                         }
                     }
 
@@ -192,7 +292,6 @@ Window {
                         TextArea {
                             id: textAreaLog
                             font.pointSize: Stl.Font.medium
-
                         }
                     }
                 }

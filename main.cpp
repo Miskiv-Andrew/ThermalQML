@@ -5,6 +5,7 @@
 #include <QFontDatabase>
 #include <QIcon>
 
+#include "backend/dispatcher.h"
 
 int main(int argc, char *argv[])
 {
@@ -27,11 +28,12 @@ int main(int argc, char *argv[])
         }
     }
 
-    //qmlRegisterType<dispatcher>("WinHeater", 1, 0, "disp");
-
     QQmlApplicationEngine engine;
 
     QQmlContext *context = engine.rootContext();
+
+    dispatcher disp;
+    context->setContextProperty("dsContext", &disp);
 
     const QUrl url(u"qrc:/qml/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
