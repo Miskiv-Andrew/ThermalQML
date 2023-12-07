@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
 
     //Update same font for all app
     int fontId = QFontDatabase::addApplicationFont(":/Fonts/GigaSans/GigaSans-Medium.ttf");
-
     if (fontId != -1) {
         QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
 

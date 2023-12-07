@@ -2028,5 +2028,17 @@
         <file>qml/pages/PageTest.qml</file>
         <file>qml/windows/WinLogin.qml</file>
         <file>qml/styles/Style.js</file>
+        <file>Fonts/UbuntuMono/UbuntuMono-B.ttf</file>
+        <file>Fonts/UbuntuMono/UbuntuMono-BI.ttf</file>
+        <file>Fonts/UbuntuMono/UbuntuMono-R.ttf</file>
+        <file>Fonts/UbuntuMono/UbuntuMono-RI.ttf</file>
+        <file>Fonts/JetBrainsMono/JetBrainsMono-Bold-Italic.ttf</file>
+        <file>Fonts/JetBrainsMono/JetBrainsMono-Bold.ttf</file>
+        <file>Fonts/JetBrainsMono/JetBrainsMono-ExtraBold-Italic.ttf</file>
+        <file>Fonts/JetBrainsMono/JetBrainsMono-ExtraBold.ttf</file>
+        <file>Fonts/JetBrainsMono/JetBrainsMono-Italic.ttf</file>
+        <file>Fonts/JetBrainsMono/JetBrainsMono-Medium-Italic.ttf</file>
+        <file>Fonts/JetBrainsMono/JetBrainsMono-Medium.ttf</file>
+        <file>Fonts/JetBrainsMono/JetBrainsMono-Regular.ttf</file>
     </qresource>
 </RCC>

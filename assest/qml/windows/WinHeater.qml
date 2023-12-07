@@ -10,8 +10,8 @@ import "../modules"
 
 Window {
 
-    width: 1200
-    height: 400
+    width: 1400
+    height: 600
     visible: true
 
     //internal params
@@ -33,7 +33,7 @@ Window {
         function onQml_send_text(string){
             var currentTime = new Date();
             var formattedTime = currentTime.toLocaleTimeString(); // Форматируйте время, как вам нужно
-            var message = formattedTime + string;
+            var message = formattedTime + " : " + string;
             textAreaLog.append(message);
         }
 
@@ -291,7 +291,10 @@ Window {
 
                         TextArea {
                             id: textAreaLog
+                            font.styleName: "Regular"
+                            font.family: "JetBrains Mono" //monofont to equal distance
                             font.pointSize: Stl.Font.medium
+
                         }
                     }
                 }

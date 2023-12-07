@@ -233,27 +233,27 @@ inline void dispatcher::receive_data_from_heater(int order, bool flag, double te
 		switch (order) {
 			
 			case 1:   // запрос на получение температуры
-				str.append("\nЗапрос на отримання температури не виконано\n");
+                str.append("[WARN] Запрос на отримання температури не виконано");
 				break;
 
 			case 2:  // включение системы контроля
-				str.append("\nЗапрос на включення системи контролю не виконано\n");
+                str.append("[WARN] Запрос на включення системи контролю не виконано");
 				break;
 
 			case 3:  //  выключение системы контроля
-				str.append("\nЗапрос на виключення системи контролю не виконано\n");
+                str.append("[WARN] Запрос на виключення системи контролю не виконано");
 				break;
 
 			case 4:  //  установка температуры (4, double)
-				str.append("\nЗапрос на встановлення температури " + QString::number(temp) + " не виконано\n");
+                str.append("[WARN] Запрос на встановлення температури " + QString::number(temp) + " не виконано");
 				break;
 
 			case 5:  //  коннект к печке
-				str.append("\nКоннект з пічкою не виконано\n");
+                str.append("[WARN] Коннект з пічкою не виконано");
 				break;
 
 			case 6:  //  дисконнект от печки
-				str.append("\nДисконнект з пічкою не виконано\n");
+                str.append("[WARN] Дисконнект з пічкою не виконано");
 				break;
 
 			default:
@@ -286,7 +286,7 @@ inline void dispatcher::receive_data_from_heater(int order, bool flag, double te
 							Здесь можно отправить сообщение в Telegramm о достижении целевой температуры
 						*/
 						
-                        str.append("\nЦільову температуру " + QString::number(target_temp) +   " досягнуто\n");
+                        str.append("[INFO] Цільову температуру " + QString::number(target_temp) + " досягнуто");
 					
 					}					
 					
@@ -296,7 +296,7 @@ inline void dispatcher::receive_data_from_heater(int order, bool flag, double te
 				break;
 
 			case 2:  // включение системы контроля
-				str.append("\nЗапрос на включення системи контролю виконано\n");
+                str.append("[INFO] Запрос на включення системи контролю виконано");
 				/*
 					Здесь запустить таймер запросов к печке	
 					Печка включена, начинаем периодический опрос по температуре
@@ -306,7 +306,7 @@ inline void dispatcher::receive_data_from_heater(int order, bool flag, double te
 				break;
 
 			case 3:  //  выключение системы контроля
-				str.append("\nЗапрос на виключення системи контролю виконано\n");
+                str.append("[INFO] Запрос на виключення системи контролю виконано");
 				/*
 					Здесь остановить таймер запросов к печке				
 				
@@ -315,7 +315,7 @@ inline void dispatcher::receive_data_from_heater(int order, bool flag, double te
 				break;
 
 			case 4:  //  установка температуры (4, double)
-				str.append("\nЗапрос на встановлення температури " + QString::number(temp) + " виконано\n");
+                str.append("[INFO] Запрос на встановлення температури " + QString::number(temp) + " виконано");
 				/*
 					Установлена новая целевая температура,
 					поднимаем флаг сверки текущей и целевой температур					
@@ -324,11 +324,11 @@ inline void dispatcher::receive_data_from_heater(int order, bool flag, double te
 				break;
 
 			case 5:  //  коннект к печке
-				str.append("\nКоннект з пічкою виконано\n");
+                str.append("[INFO] Коннект з пічкою виконано");
 				break;
 
 			case 6:  //  дисконнект от печки
-				str.append("\nДисконнект з пічкою виконано\n");
+                str.append("[INFO] Дисконнект з пічкою виконано");
 				break;
 
 
@@ -389,7 +389,7 @@ inline void dispatcher::receive_exeptinfo_from_heater(int type, QString str) {
 inline void dispatcher::receive_data_from_QML(QVariantList list) {
 
 	if(list.isEmpty()) {
-		emit qml_send_text("Отримано порожній список");
+        emit qml_send_text("[INFO] Отримано порожній список");
 		return;
 	}
 	
@@ -436,7 +436,7 @@ inline void dispatcher::receive_data_from_QML(QVariantList list) {
 			
 			QString str;
 			str.clear();
-			str.append("Список отриманих цільових температур\n");
+            str.append("[INFO] Список отриманих цільових температур");
 			
 			for(int i = 0; i < unfinished_temp_list.size(); ++i) 				
                 str.append(" " + QString::number(unfinished_temp_list.at(i)));
