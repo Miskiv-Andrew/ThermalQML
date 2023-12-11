@@ -53,6 +53,7 @@ Window {
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 20
+                    spacing: 20
 
                     TextArea {
                         Layout.fillWidth: true
@@ -163,6 +164,7 @@ Window {
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 10
+                    spacing: 20
 
                     Rectangle {
                         Layout.fillWidth: true
@@ -173,6 +175,7 @@ Window {
                         GridLayout {
                             anchors.fill: parent
                             anchors.margins: 20
+
                             columns: 2
                             rows: 2
 
@@ -181,12 +184,13 @@ Window {
                                 Layout.fillWidth: true
                                 Layout.row: 0
                                 Layout.column: 0
-                                id: switchFurnaceConncet
-                                text: qsTr("Підключення до пічки")
+                                id: switchControllSystem
+                                text: "Система контролю"
                                 font.pointSize: sm.mFont
+                                enabled: !switchFurnaceConncet.checked
                                 onClicked: {
                                     var command = []
-                                    switchFurnaceConncet.checked ? command = ["on_control_heater"] : command = ["off_control_heater"]
+                                    switchControllSystem.checked ? command = ["connect_heater"] : command = ["disconnect_heater"]
                                     dsContext.receive_data_from_QML(command)
                                     console.log(command)
                                 }
@@ -197,49 +201,52 @@ Window {
                                 Layout.fillWidth: true
                                 Layout.row: 1
                                 Layout.column: 0
-                                id: switchControllSystem
-                                text: "Система контролю"
+                                id: switchFurnaceConncet
+                                text: qsTr("Підключення до пічки")
                                 font.pointSize: sm.mFont
+                                enabled: switchControllSystem.checked
                                 onClicked: {
                                     var command = []
-                                    switchControllSystem.checked ? command = ["connect_heater"] : command = ["disconnect_heater"]
+                                    switchFurnaceConncet.checked ? command = ["on_control_heater"] : command = ["off_control_heater"]
                                     dsContext.receive_data_from_QML(command)
                                     console.log(command)
                                 }
                             }
 
-                            Text {
+                            ColumnLayout {
                                 Layout.fillWidth: true
                                 Layout.row: 0
                                 Layout.column: 1
-                                id: temperatureLable
-                                text: "Поточна температура: " + dsContext.temp
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                font.pointSize: sm.mFont
-                            }
+                                Layout.rowSpan: 2
 
-                            RowLayout {
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                Layout.row: 1
-                                Layout.column: 1
-                                spacing: 10
 
-                                Text {
-                                    text: "Цільова температура"
-                                    font.pointSize: sm.mFont
+                                RowLayout {
+
+                                    Text {
+                                        Layout.fillWidth: true
+                                        text: "Поточна температура:"
+                                        font.pointSize: sm.mFont
+                                    }
+
+                                    TextField {
+                                        id: temperatureLable
+                                        text: dsContext.temp
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+                                        font.pointSize: sm.mFont
+                                    }
                                 }
 
-                                Rectangle {
-                                    Layout.preferredWidth: 100
-                                    Layout.fillHeight: true
-                                    border.color: "orange"
-                                    border.width: 1
-                                    radius: 10
 
-                                    TextInput {
-                                        anchors.fill: parent
+                                RowLayout {
+
+                                    Text {
+                                        Layout.fillWidth: true
+                                        text: "Цільова температура:"
+                                        font.pointSize: sm.mFont
+                                    }
+
+                                    TextField {
                                         id: tagetTempInput
                                         selectByMouse: true
                                         horizontalAlignment: TextEdit.AlignHCenter
@@ -260,10 +267,10 @@ Window {
                                         }
 
                                     }
+
                                 }
+
                             }
-
-
                         }
                     }
 
