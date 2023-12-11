@@ -6,12 +6,16 @@
 #include <QIcon>
 
 #include "backend/dispatcher.h"
+#include "backend/settings.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv); //Here etc..
     app.setWindowIcon(QIcon(":/icons/win-icon.png"));
+
+    // Get programm path where it launched
+    QString programPath = QCoreApplication::applicationDirPath();
 
     //Update same font for all app
     int fontId = QFontDatabase::addApplicationFont(":/Fonts/GigaSans/GigaSans-Medium.ttf");
@@ -28,8 +32,11 @@ int main(int argc, char *argv[])
     }
 
     QQmlApplicationEngine engine;
-
     QQmlContext *context = engine.rootContext();
+
+    Settings settingsManager(programPath);
+    settingsManager.readSettingsFromFile();
+    context->setContextProperty("smContext", &settingsManager);
 
     dispatcher disp;
     context->setContextProperty("dsContext", &disp);

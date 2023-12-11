@@ -1955,15 +1955,9 @@
         <file>icons/zoom-in.svg</file>
         <file>icons/zoom-out.svg</file>
         <file>qml/main.qml</file>
-        <file>qml/modules/ColorTheme.qml</file>
-        <file>qml/modules/FontStyle.qml</file>
-        <file>qml/modules/SceTopBarButton.qml</file>
-        <file>qml/modules/SceLeftMenuButton.qml</file>
         <file>qml/modules/SceDeviceItem.qml</file>
         <file>qml/windows/WinCoeff.qml</file>
         <file>qml/windows/WinSpectr.qml</file>
-        <file>qml/scripts/SpectrumControlScript.qml</file>
-        <file>qml/scripts/WindowControlScript.qml</file>
         <file>qml/windows/WinDevlist.qml</file>
         <file>qml/windows/Test.qml</file>
         <file>qml/windows/WinHeater.qml</file>
@@ -2027,7 +2021,6 @@
         <file>qml/pages/PageSettings.qml</file>
         <file>qml/pages/PageTest.qml</file>
         <file>qml/windows/WinLogin.qml</file>
-        <file>qml/styles/Style.js</file>
         <file>Fonts/UbuntuMono/UbuntuMono-B.ttf</file>
         <file>Fonts/UbuntuMono/UbuntuMono-BI.ttf</file>
         <file>Fonts/UbuntuMono/UbuntuMono-R.ttf</file>
@@ -2040,5 +2033,7 @@
         <file>Fonts/JetBrainsMono/JetBrainsMono-Medium-Italic.ttf</file>
         <file>Fonts/JetBrainsMono/JetBrainsMono-Medium.ttf</file>
         <file>Fonts/JetBrainsMono/JetBrainsMono-Regular.ttf</file>
+        <file>qml/styles/Settings.qml</file>
+        <file>qml/styles/ColorTheme.qml</file>
     </qresource>
 </RCC>

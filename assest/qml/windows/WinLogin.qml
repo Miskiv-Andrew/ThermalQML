@@ -18,7 +18,7 @@ Window {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            font.pointSize: bFontSize
+            font.pointSize: sm.bFont
             text: "Увійти"
         }
 

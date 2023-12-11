@@ -9,6 +9,39 @@ Page {
         color: "#dbdcdc"
         anchors.fill: parent
 
+        Connections { target: smContext }
+
+        Popup {
+            id: popupApply
+            x: Math.round((parent.width - width) / 2)
+            y: Math.round((parent.height - height) / 2)
+            width: 400
+            height: 150
+            modal: true
+            focus: true
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+            contentItem: Rectangle {
+                anchors.fill: parent
+                anchors.margins: 10
+                ColumnLayout {
+                    anchors.fill: parent
+                    Text {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        text: "Для того щоб зміни вступили в силу перезавантажде додаток"
+                        wrapMode: Text.WordWrap // Добавлено для автоматического переноса текста
+                        font.pointSize: sm.mFont
+                    }
+                    Button {
+                        Layout.alignment: Qt.AlignCenter
+                        width: popupApply.width/3
+                        text: "Ok"
+                        onClicked: popupApply.close()
+                    }
+                }
+            }
+        }
+
         ScrollView {
             anchors.fill: parent
 
@@ -24,7 +57,6 @@ Page {
                     horizontalOffset: 2
                     verticalOffset: 4
                     radius: 4
-
                 }
 
                 GridLayout {
@@ -42,9 +74,10 @@ Page {
                             spacing: 5
 
                             Button {
-                                text: "Interface"
+                                text: "Інтерфейс"
                                 display: AbstractButton.TextBesideIcon
-                                icon.source: "qrc:/icons/reply.svg"
+                                icon.source: "qrc:/icons/display.svg"
+                                font.pixelSize: sm.mFont;
                                 width: parent.width
                                 checkable: true
                                 autoExclusive: true
@@ -52,9 +85,10 @@ Page {
                             }
 
                             Button {
-                                text: "Telegram Bot"
+                                text: "Telegram bot"
                                 display: AbstractButton.TextBesideIcon
-                                icon.source: "qrc:/icons/send.svg"
+                                icon.source: "qrc:/icons/telegram.svg"
+                                font.pixelSize: sm.mFont;
                                 width: parent.width
                                 checkable: true
                                 autoExclusive: true
@@ -68,8 +102,20 @@ Page {
                                 width: parent.width
                             }
 
+                            Item { Layout.fillHeight: true }
 
-
+                            Button {
+                                text: "Зберегти"
+                                display: AbstractButton.TextBesideIcon
+                                icon.source: "qrc:/icons/save.svg"
+                                font.pixelSize: sm.mFont;
+                                width: parent.width
+                                flat: true
+                                onClicked: {
+                                    smContext.writeSettingsToFile()
+                                    popupApply.open()
+                                }
+                            }
 
                         }
                     }
@@ -98,7 +144,7 @@ Page {
                                     topPadding: 50
                                     spacing: 10
 
-                                    Text { text: "Display"; font.bold: true; font.pixelSize:18; verticalAlignment: Text.AlignTop; }
+                                    Text { text: "Інтерфейс"; font.bold: true; font.pixelSize: sm.bFont; verticalAlignment: Text.AlignTop; }
 
                                     Rectangle {
                                         color: "#ffffff"
@@ -112,7 +158,6 @@ Page {
                                             horizontalOffset: 2
                                             verticalOffset: 4
                                             radius: 8
-
                                         }
 
 
@@ -122,35 +167,56 @@ Page {
 
                                             RowLayout {
                                                 Layout.preferredHeight: 50
-                                                Text { text: "Size"; font.pixelSize: 14; Layout.fillWidth: true }
-                                                ComboBox { model: ["Small", "Normal", "Big"]; font.pixelSize: 14; }
-                                            }
-                                            Rectangle { color: "#eaeaea"; height: 2; Layout.fillWidth: true }
-
-                                            RowLayout {
-                                                Layout.preferredHeight: 50
-                                                Text { text: "Antializing"; font.pixelSize: 14; Layout.fillWidth: true }
-                                                Switch { }
-                                            }
-                                            Rectangle { color: "#eaeaea"; height: 2; Layout.fillWidth: true }
-
-                                            RowLayout {
-                                                Layout.preferredHeight: 50
                                                 ColumnLayout {
-                                                    Text { text: "Icon size"; font.pixelSize: 14; Layout.fillWidth: true }
-                                                    Text { text: "Size of desctop icons"; font.pixelSize: 12; Layout.fillWidth: true; color: "gray"}
+                                                    Text { text: "Розмір тексту"; font.pixelSize: sm.mFont; Layout.fillWidth: true }
+                                                    Text { text: "Розмір тексту у всьому додатку"; font.pixelSize: sm.sFont; Layout.fillWidth: true; color: "gray"}
                                                 }
-                                                ComboBox {  model: ["Small", "Normal", "Big"]; font.pixelSize: 14 }
+                                                ComboBox {model: [8, 10, 12, 14, 16, 18, 20, 22, 24]; font.pixelSize: sm.mFont;
+                                                    onActivated: smContext.setValue("Font/size", currentText)
+                                                    Component.onCompleted: currentIndex = find(smContext.getValue("Font/size"))
+                                                }
                                             }
                                             Rectangle { color: "#eaeaea"; height: 2; Layout.fillWidth: true }
 
                                             RowLayout {
                                                 Layout.preferredHeight: 50
+
                                                 ColumnLayout {
-                                                    Text { text: "Sorting"; font.pixelSize: 14; Layout.fillWidth: true }
-                                                    Text { text: "Sorting data in the table"; font.pixelSize: 12; Layout.fillWidth: true; color: "gray"}
+                                                    Text { text: "Дельта розміру тексту"; font.pixelSize: sm.mFont; Layout.fillWidth: true }
+                                                    Text { text: "Різниця між малим/великим текстом відностно основго розміру"; font.pixelSize: sm.sFont; Layout.fillWidth: true; color: "gray"}
                                                 }
-                                                Switch { }
+                                                ComboBox { model: [0, 1, 2, 3, 4, 5, 6, 7, 8]; font.pixelSize: sm.mFont;
+                                                    onActivated: smContext.setValue("Font/deltaSize", currentText)
+                                                    Component.onCompleted: currentIndex = find(smContext.getValue("Font/deltaSize"))
+                                                }
+                                            }
+                                            Rectangle { color: "#eaeaea"; height: 2; Layout.fillWidth: true }
+
+                                            RowLayout {
+                                                Layout.preferredHeight: 50
+
+                                                ColumnLayout {
+                                                    Text { text: "Висота кнопок"; font.pixelSize: sm.mFont; Layout.fillWidth: true }
+                                                    Text { text: ""; font.pixelSize: sm.sFont; Layout.fillWidth: true; color: "gray"}
+                                                }
+                                                ComboBox { model: [20, 30, 40, 50, 60, 70, 80]; font.pixelSize: sm.mFont;
+                                                    onActivated: smContext.setValue("Control/btnHeight", currentText)
+                                                    Component.onCompleted: currentIndex = find(smContext.getValue("Control/btnHeight"))
+                                                }
+                                            }
+                                            Rectangle { color: "#eaeaea"; height: 2; Layout.fillWidth: true }
+
+                                            RowLayout {
+                                                Layout.preferredHeight: 50
+
+                                                ColumnLayout {
+                                                    Text { text: "Ширина кнопок"; font.pixelSize: sm.mFont; Layout.fillWidth: true }
+                                                    Text { text: ""; font.pixelSize: sm.sFont; Layout.fillWidth: true; color: "gray"}
+                                                }
+                                                ComboBox {model: [100, 120, 140, 160, 180, 200, 220, 240]; font.pixelSize: sm.mFont;
+                                                    onActivated: smContext.setValue("Control/btnWidth", currentText)
+                                                    Component.onCompleted: currentIndex = find(smContext.getValue("Control/btnWidth"))
+                                                }
                                             }
 
 

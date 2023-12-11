@@ -5,9 +5,6 @@ import Qt5Compat.GraphicalEffects
 import Qt.labs.qmlmodels 1.0
 import QtCharts 6.3
 
-//---Styles
-import "../styles/Style.js" as Stl
-
 Item {
 
     property real leftBoundry:  0
@@ -77,13 +74,13 @@ Item {
                         Switch {
                             id: switchStartStopSpectr
                             text: qsTr("Почати накопичення")
-                            font.pointSize: Stl.Font.small
+                            font.pointSize: sm.sFont
                         }
 
                         Switch {
                             id: switchLogarifmSpect
                             text: qsTr("Логарифмічна шкала")
-                            font.pointSize: Stl.Font.small
+                            font.pointSize: sm.sFont
                         }
 
                         Item {
@@ -91,12 +88,12 @@ Item {
                         }
 
                         Button {
-                            Layout.preferredWidth: Stl.Btn.Width
-                            Layout.preferredHeight: Stl.Btn.Height
+                            Layout.preferredWidth: sm.btnW
+                            Layout.preferredHeight: sm.btnH
                             display: AbstractButton.TextBesideIcon
                             icon.source: "qrc:/icons/eraser.svg"
                             text: "Очистити"
-                            font.pointSize: Stl.Font.small
+                            font.pointSize: sm.sFont
                             onClicked: spectrumSeries.clear()
                         }
                     }
@@ -120,14 +117,14 @@ Item {
                         ValueAxis {
                             id: valueAxisX
                             labelFormat: "%.0f"
-                            labelsFont:Qt.font({pointSize: Stl.Font.small})
+                            labelsFont:Qt.font({pointSize: sm.sFont})
                         }
 
                         ValueAxis {
                             id: valueAxisY
                             labelFormat: "%.0f"
                             //font.pointSize: fontSize - 4
-                            labelsFont:Qt.font({pointSize: Stl.Font.small})
+                            labelsFont:Qt.font({pointSize: sm.sFont})
                         }
 
                         LineSeries {
@@ -150,7 +147,7 @@ Item {
                                   '<p> 00.00 мкЗв/год  </p>' +
                                   '<p> 00.00 °C  </p>'
                             anchors.fill: parent
-                            font.pixelSize: Stl.Font.big
+                            font.pixelSize: sm.bFont
                             horizontalAlignment: Text.AlignRight
                             anchors.margins: 50
                         }
@@ -186,7 +183,7 @@ Item {
                                     id: mcText
                                     horizontalAlignment: Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
-                                    font.pointSize: Stl.Font.small
+                                    font.pointSize: sm.sFont
                                     text: ""
 
 
@@ -221,7 +218,7 @@ Item {
                                         anchors.fill: parent
                                         horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
-                                        font.pointSize: Stl.Font.small
+                                        font.pointSize: sm.sFont
                                         text: ""
 
                                     }
@@ -250,7 +247,7 @@ Item {
                                         id: hcText
                                         horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
-                                        font.pointSize: Stl.Font.small
+                                        font.pointSize: sm.sFont
                                         text: ""
 
                                     }

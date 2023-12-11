@@ -3,9 +3,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 
-//---Styles
-import "../styles/Style.js" as Stl
-
 Item {
     width: parent.width
     height: 60
@@ -15,20 +12,20 @@ Item {
         x: actionBtn.x + actionBtn.width
         y: actionBtn.y + actionBtn.height
 
-        font.pointSize: Stl.Font.small
+        font.pointSize: sm.sFont
 
         MenuItem {
             text: qsTr("Підключити")
-            onTriggered: zoomIn()
+            onTriggered: {}
         }
         MenuSeparator {}
         Menu {
             title: "Додатково.."
-            font.pointSize: Stl.Font.small
+            font.pointSize: sm.sFont
 
             MenuItem {
                 text: qsTr("Видалити")
-                onTriggered: zoomOut()
+                onTriggered: {}
             }
         }
     }
@@ -49,7 +46,7 @@ Item {
                 Layout.fillWidth: true
                 id: deviceName
                 text: deviceNameStr
-                font.pixelSize: Stl.Font.medium
+                font.pixelSize: sm.mFont
             }
 
             Button {
@@ -65,7 +62,7 @@ Item {
                 Layout.fillWidth: true
                 id: comPortName
                 text: comPortNameStr
-                font.pixelSize: Stl.Font.small
+                font.pixelSize: sm.sFont
                 font.italic: true
             }
         }

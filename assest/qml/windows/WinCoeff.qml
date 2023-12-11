@@ -4,9 +4,6 @@ import Qt5Compat.GraphicalEffects
 import Qt.labs.qmlmodels 1.0
 import QtQuick.Layouts
 
-//---Styles
-import "../styles/Style.js" as Stl
-
 Item {
 
     property real leftBoundry:  0
@@ -68,27 +65,27 @@ Item {
                             Layout.fillWidth: true
                             id: checkThermalCompOnOff
                             text: qsTr("Термокомпенсація")
-                            font.pointSize: Stl.Font.small
+                            font.pointSize: sm.sFont
                             focusPolicy: Qt.ClickFocus
                         }
 
 
                         Button {
-                            Layout.preferredWidth: Stl.Btn.Width
-                            Layout.preferredHeight: Stl.Btn.Height
+                            Layout.preferredWidth: sm.btnW
+                            Layout.preferredHeight: sm.btnH
                             display: AbstractButton.TextBesideIcon
                             icon.source: "qrc:/icons/chevron-bar-expand.svg"
                             text: "Зчитати"
-                            font.pointSize: Stl.Font.small
+                            font.pointSize: sm.sFont
                         }
 
                         Button {
-                            Layout.preferredWidth: Stl.Btn.Width
-                            Layout.preferredHeight: Stl.Btn.Height
+                            Layout.preferredWidth: sm.btnW
+                            Layout.preferredHeight: sm.btnH
                             display: AbstractButton.TextBesideIcon
                             icon.source: "qrc:/icons/chevron-bar-contract.svg"
                             text: "Зашити"
-                            font.pointSize: Stl.Font.small
+                            font.pointSize: sm.sFont
                         }
 
                     }
@@ -129,7 +126,7 @@ Item {
                                     Text {
                                         anchors.centerIn: parent
                                         text: model.headerText  // Use modelData to display the header text
-                                        font.pointSize: Stl.Font.small
+                                        font.pointSize: sm.sFont
                                     }
                                 }
                             }
@@ -170,7 +167,7 @@ Item {
                                     anchors.fill: parent
                                     horizontalAlignment: TextEdit.AlignHCenter
                                     verticalAlignment: TextEdit.AlignVCenter
-                                    font.pointSize: Stl.Font.small
+                                    font.pointSize: sm.sFont
                                     validator: DoubleValidator {
                                         top: 10000.00;
                                         bottom: -100.00;

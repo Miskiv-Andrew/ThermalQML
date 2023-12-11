@@ -6,14 +6,11 @@ import QtCharts 6.3
 import Qt.labs.qmlmodels 1.0
 import QtQuick.Dialogs
 
-//---Styles
-import "./styles/Style.js" as Stl
-
 //---User Module Includes
 import "modules"
 import "windows"
-import "scripts"
 import "pages"
+import "styles"
 
 ApplicationWindow  {
     id: app
@@ -23,15 +20,17 @@ ApplicationWindow  {
     color: "#00000000"
     title: qsTr("UTC")
 
+    Settings { id: sm }
+
     Material.accent: Material.DeepOrange
 
     menuBar: MenuBar {
 
-        font.pointSize: Stl.Font.small
+        font.pointSize: sm.sFont
 
         Menu {
             title: qsTr("&Файл")
-            font.pointSize: Stl.Font.small
+            font.pointSize: sm.sFont
             Action { text: qsTr("Відкрити спектр")
                 onTriggered: { fileDialog.open() }
             }
@@ -40,7 +39,7 @@ ApplicationWindow  {
         }
         Menu {
             title: qsTr("&Управління")
-            font.pointSize: Stl.Font.small
+            font.pointSize: sm.sFont
             Action { text: qsTr("Пічка")
                 onTriggered: { manualHeater.show() }
             }
@@ -66,16 +65,6 @@ ApplicationWindow  {
         id: manualHeater
         Material.accent: Material.DeepOrange
         visible: false;
-    }
-
-
-    // INTERNAL FUNCTIONS
-    WindowControlScript {
-        id: windowManager
-    }
-
-    FontStyle{
-        id: fontstyle
     }
 
     ColorTheme{

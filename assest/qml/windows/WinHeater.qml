@@ -3,9 +3,6 @@ import QtQuick.Controls.Material
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 
-//---Styles
-import "../styles/Style.js" as Stl
-
 import "../modules"
 
 Window {
@@ -13,19 +10,6 @@ Window {
     width: 1400
     height: 600
     visible: true
-
-    //internal params
-    property double previosTemperature: 0
-    property double currentTemperature: 0
-    property double targetTemperature: 0
-    property double nextTemperature: 0
-    property double manualTemperature: 0
-
-    property string currentMode: "Термокомпенсація"
-    property string buttonOnState: "Увімкнути"
-
-    property int timeLeft: 600
-    property int timePassed: 600
 
     Connections {
         target: dsContext
@@ -36,7 +20,6 @@ Window {
             var message = formattedTime + " : " + string;
             textAreaLog.append(message);
         }
-
 
     }
 
@@ -114,7 +97,7 @@ Window {
                                 x: actionBtn.x + actionBtn.width
                                 y: actionBtn.y + actionBtn.height
 
-                                font.pointSize: Stl.Font.small
+                                font.pointSize: sm.sFont
 
                                 MenuItem {
                                     text: qsTr("Видалити")
@@ -141,7 +124,7 @@ Window {
                                         text: model.temperature
                                         verticalAlignment: Qt.AlignVCenter
                                         horizontalAlignment: Qt.AlignHCenter
-                                        font.pixelSize: Stl.Font.medium
+                                        font.pixelSize: sm.mFont
                                     }
 
                                     Button {
@@ -200,7 +183,7 @@ Window {
                                 Layout.column: 0
                                 id: switchFurnaceConncet
                                 text: qsTr("Підключення до пічки")
-                                font.pointSize: Stl.Font.medium
+                                font.pointSize: sm.mFont
                                 onClicked: {
                                     var command = []
                                     switchFurnaceConncet.checked ? command = ["on_control_heater"] : command = ["off_control_heater"]
@@ -216,7 +199,7 @@ Window {
                                 Layout.column: 0
                                 id: switchControllSystem
                                 text: "Система контролю"
-                                font.pointSize: Stl.Font.medium
+                                font.pointSize: sm.mFont
                                 onClicked: {
                                     var command = []
                                     switchControllSystem.checked ? command = ["connect_heater"] : command = ["disconnect_heater"]
@@ -233,7 +216,7 @@ Window {
                                 text: "Поточна температура: " + dsContext.temp
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
-                                font.pointSize: Stl.Font.medium
+                                font.pointSize: sm.mFont
                             }
 
                             RowLayout {
@@ -245,7 +228,7 @@ Window {
 
                                 Text {
                                     text: "Цільова температура"
-                                    font.pointSize: Stl.Font.medium
+                                    font.pointSize: sm.mFont
                                 }
 
                                 Rectangle {
@@ -261,7 +244,7 @@ Window {
                                         selectByMouse: true
                                         horizontalAlignment: TextEdit.AlignHCenter
                                         verticalAlignment: TextEdit.AlignVCenter
-                                        font.pointSize: Stl.Font.medium
+                                        font.pointSize: sm.mFont
                                         validator: DoubleValidator {
                                             top: 99.99;
                                             bottom: -99.99;
@@ -293,7 +276,7 @@ Window {
                             id: textAreaLog
                             font.styleName: "Regular"
                             font.family: "JetBrains Mono" //monofont to equal distance
-                            font.pointSize: Stl.Font.medium
+                            font.pointSize: sm.mFont
 
                         }
                     }

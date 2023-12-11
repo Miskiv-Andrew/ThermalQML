@@ -40,7 +40,6 @@ Slider {
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font.family: "Poppins"
                 text: "0 °C"
             }
 
