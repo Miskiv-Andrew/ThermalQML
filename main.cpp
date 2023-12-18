@@ -7,6 +7,7 @@
 
 #include "backend/dispatcher.h"
 #include "backend/settings.h"
+#include "backend/devicelist.h"
 
 int main(int argc, char *argv[])
 {
@@ -40,6 +41,11 @@ int main(int argc, char *argv[])
 
     dispatcher disp;
     context->setContextProperty("dsContext", &disp);
+
+    DeviceList deviceList;
+    context->setContextProperty("deviceListModel", &deviceList);
+    disp.setDeviceList(&deviceList);
+
 
     const QUrl url(u"qrc:/qml/main.qml"_qs);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

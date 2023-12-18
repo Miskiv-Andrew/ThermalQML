@@ -5,7 +5,7 @@
 #include <QThread>
 #include <QtGlobal>
 #include "heater.h"
-
+#include "devicelist.h"
 
 
 class dispatcher : public QObject
@@ -20,6 +20,9 @@ public:
 	explicit dispatcher(QObject *parent = nullptr);
 
     ~dispatcher();
+
+    // Метод для установки указателя на DeviceList (для отображения в списке QML)
+    void setDeviceList(DeviceList* deviceList);
 
 public slots:
 
@@ -80,6 +83,8 @@ private:
 	QList<double> unfinished_temp_list; // Список целевых "неотработанных" температур
 	
 	QList<double>finished_temp_list;    // Список целевых "отработанных" температур
+
+    DeviceList* m_deviceList;           //Список девайсов (List QML)
 
 
 signals:
@@ -161,6 +166,12 @@ inline dispatcher::~dispatcher()
 {
     heat_thread->deleteLater();
     heater_obj->deleteLater();
+}
+
+//Spectre
+inline void dispatcher::setDeviceList(DeviceList *deviceList)
+{
+    m_deviceList = deviceList;
 }
 
 
@@ -407,7 +418,20 @@ inline void dispatcher::receive_data_from_QML(QVariantList list) {
 			emit receive_order_to_heater(2, 0.0); 
 					
 		else if(str == "off_control_heater")  // Отключение системы контроля печки
-			emit receive_order_to_heater(3, 0.0); 		
+            emit receive_order_to_heater(3, 0.0);
+        else if(str == "start_search"){
+            //test adding
+            DeviceList::DeviceItem item1{"Spectra №19000031", "COM1"};
+            DeviceList::DeviceItem item2{"Spectra №19000033", "COM2"};
+            DeviceList::DeviceItem item3{"Cadmium №18000032", "COM3"};
+            DeviceList::DeviceItem item4{"BDBG-09 №16000034", "COM4"};
+            m_deviceList->addDevice(item1);
+            m_deviceList->addDevice(item2);
+            m_deviceList->addDevice(item3);
+            m_deviceList->addDevice(item4);
+
+        }
+
 		
 		return;		
 	}

@@ -39,6 +39,7 @@ DISTFILES += \
     assest/qml/windows/WinSpectr.qml
 
 HEADERS += \
+    backend/devicelist.h \
     backend/dispatcher.h \
     backend/heater.h \
     backend/settings.h

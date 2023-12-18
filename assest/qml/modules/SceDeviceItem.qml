@@ -1,11 +1,34 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 
 Item {
     width: parent.width
     height: 60
+
+    MessageDialog {
+        id: delMesDialog
+        text: " "
+        informativeText: "Зберігати данні прилада?"
+        buttons: MessageDialog.Ok | MessageDialog.Cancel
+
+        onAccepted: {
+            var command = ["delete_dev", "save"]
+            dsContext.receive_data_from_QML(command)
+            deviceListModel.removeDevice(index) //pass index in devicelist.h
+            console.log(command)
+        }
+
+        onRejected: {
+            var command = ["delete_dev", "not"]
+            dsContext.receive_data_from_QML(command)
+            deviceListModel.removeDevice(index) //pass index in devicelist.h
+            console.log(command)
+        }
+    }
+
 
     Menu {
         id: actionMenu
@@ -18,14 +41,16 @@ Item {
             text: qsTr("Підключити")
             onTriggered: {}
         }
+
         MenuSeparator {}
+
         Menu {
             title: "Додатково.."
             font.pointSize: sm.sFont
 
             MenuItem {
                 text: qsTr("Видалити")
-                onTriggered: {}
+                onTriggered: { delMesDialog.open() }
             }
         }
     }
@@ -36,6 +61,19 @@ Item {
         anchors.fill: parent
         color: index % 2 == 0 ? "#00000000" : "#e6e6e6"
 
+        MouseArea {
+            anchors.fill: parent
+
+            onClicked: {
+                if (!model.selected) {
+                    var command = ["select_dev", index]
+                    dsContext.receive_data_from_QML(command)
+                    deviceListModel.setSelectedIndex(index) //pass index in devicelist.h
+                    console.log(command)
+                }
+            }
+        }
+
         GridLayout {
             anchors.fill: parent
             anchors.margins: 5
@@ -45,7 +83,7 @@ Item {
             Text {
                 Layout.fillWidth: true
                 id: deviceName
-                text: deviceNameStr
+                text: model.deviceName
                 font.pixelSize: sm.mFont
             }
 
@@ -54,19 +92,36 @@ Item {
                 id: actionBtn
                 display: AbstractButton.TextBesideIcon
                 icon.source: "qrc:/icons/three-dots.svg"
+                icon.color: index === deviceListModel.selectedIndex ? "orangered" : "dark"
                 onClicked: actionMenu.open()
                 flat: true
+
             }
 
-            Text {
+            RowLayout {
                 Layout.fillWidth: true
-                id: comPortName
-                text: comPortNameStr
-                font.pixelSize: sm.sFont
-                font.italic: true
+                spacing: 10
+
+                Text {
+                    id: comPortName
+                    text: model.comPortName
+                    font.pixelSize: sm.sFont
+                    font.italic: true
+                }
+
+                IconLabel {
+                    id: isChosed
+                    visible: index === deviceListModel.selectedIndex
+                    icon.source: "qrc:/icons/check-square.svg"
+                }
+                IconLabel {
+                    id: isConnected
+                    visible: index === deviceListModel.selectedIndex
+                    icon.source: "qrc:/icons/hdd-network.svg"
+                }
             }
         }
-    }
+    } 
 }
 
 /*##^##

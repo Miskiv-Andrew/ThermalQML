@@ -38,25 +38,70 @@ ApplicationWindow  {
             Action { text: qsTr("Зберегти CSV") }
         }
         Menu {
+            title: qsTr("Прилади")
+            font.pointSize: sm.sFont
+            Action { text: qsTr("Почати пошук")
+                onTriggered: {
+                    var command = ["start_search"]
+                    dsContext.receive_data_from_QML(command)
+                    console.log(command)
+                }
+            }
+            Action { text: qsTr("Перепідключити")
+                onTriggered: {
+                    var command = ["start_research"]
+                    dsContext.receive_data_from_QML(command)
+                    console.log(command)
+                }
+            }
+            Action { text: qsTr("Відновити сессію")
+                onTriggered: {
+                    fileDialogSession.open()
+                }
+            }
+            Action { text: qsTr("Додати прилад до сесії")
+                onTriggered: {
+                    fileDialogAddToSession.open()
+                }
+            }
+        }
+        Menu {
             title: qsTr("&Управління")
             font.pointSize: sm.sFont
             Action { text: qsTr("Пічка")
                 onTriggered: { manualHeater.show() }
             }
-
         }
+    }
 
+    FileDialog {
+        id: fileDialogSession
+        title: "Виберіть файл сесії"
+        onAccepted: {
+            var filePath = selectedFile.toString().replace("file:///",'')
+            var command = ["restart_session", filePath]
+            dsContext.receive_data_from_QML(command)
+            console.log(command)
+        }
+    }
+
+    FileDialog {
+        id: fileDialogAddToSession
+        title: "Виберіть прилад для додання до сесії"
+        onAccepted: {
+            var filePath = selectedFile.toString().replace("file:///",'')
+            var command = ["add_device", filePath]
+            dsContext.receive_data_from_QML(command)
+            console.log(command)
+        }
     }
 
     FileDialog {
         id: fileDialog
-        title: "Please choose a file"
+        title: "Виберіть файл спектра"
         onAccepted: {
-            var filePath = fileDialog.selectedFile.toString().replace("file:///",'')
+            var filePath = selectedFile.toString().replace("file:///",'')
             console.log("You chose: " + filePath)
-        }
-        onRejected: {
-            console.log("Canceled")
         }
     }
 
@@ -175,6 +220,8 @@ ApplicationWindow  {
             }
         }
     }
+
+    Connections { target: dsContext }
 }
 
 

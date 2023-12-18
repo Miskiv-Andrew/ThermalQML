@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 import Qt5Compat.GraphicalEffects
 
 Page {
@@ -11,35 +12,11 @@ Page {
 
         Connections { target: smContext }
 
-        Popup {
+        MessageDialog {
             id: popupApply
-            x: Math.round((parent.width - width) / 2)
-            y: Math.round((parent.height - height) / 2)
-            width: 400
-            height: 150
-            modal: true
-            focus: true
-            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-            contentItem: Rectangle {
-                anchors.fill: parent
-                anchors.margins: 10
-                ColumnLayout {
-                    anchors.fill: parent
-                    Text {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        text: "Для того щоб зміни вступили в силу перезавантажде додаток"
-                        wrapMode: Text.WordWrap // Добавлено для автоматического переноса текста
-                        font.pointSize: sm.mFont
-                    }
-                    Button {
-                        Layout.alignment: Qt.AlignCenter
-                        width: popupApply.width/3
-                        text: "Ok"
-                        onClicked: popupApply.close()
-                    }
-                }
-            }
+            text: " "
+            informativeText: "Для того щоб зміни вступили в силу перезавантажде додаток"
+            buttons: MessageDialog.Ok
         }
 
         ScrollView {
