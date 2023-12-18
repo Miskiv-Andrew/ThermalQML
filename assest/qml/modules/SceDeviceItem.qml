@@ -15,14 +15,14 @@ Item {
         buttons: MessageDialog.Ok | MessageDialog.Cancel
 
         onAccepted: {
-            var command = ["delete_dev", "save"]
+            var command = ["delete_dev", index, "save"]
             dsContext.receive_data_from_QML(command)
             deviceListModel.removeDevice(index) //pass index in devicelist.h
             console.log(command)
         }
 
         onRejected: {
-            var command = ["delete_dev", "not"]
+            var command = ["delete_dev", index, "not"]
             dsContext.receive_data_from_QML(command)
             deviceListModel.removeDevice(index) //pass index in devicelist.h
             console.log(command)
