@@ -429,6 +429,7 @@ inline void dispatcher::receive_data_from_QML(QVariantList list) {
             m_deviceList->addDevice(item2);
             m_deviceList->addDevice(item3);
             m_deviceList->addDevice(item4);
+            emit qml_send_text("devices added");
 
         }
 

@@ -8,25 +8,28 @@ Item {
     width: parent.width
     height: 60
 
+    property bool switchInfo: true
+
     MessageDialog {
         id: delMesDialog
         text: " "
         informativeText: "Зберігати данні прилада?"
-        buttons: MessageDialog.Ok | MessageDialog.Cancel
+        buttons: MessageDialog.Yes | MessageDialog.No | MessageDialog.Cancel
 
         onAccepted: {
             var command = ["delete_dev", index, "save"]
             dsContext.receive_data_from_QML(command)
-            deviceListModel.removeDevice(index) //pass index in devicelist.h
+            //deviceListModel.removeDevice(index) //pass index in devicelist.h
             console.log(command)
         }
 
         onRejected: {
             var command = ["delete_dev", index, "not"]
             dsContext.receive_data_from_QML(command)
-            deviceListModel.removeDevice(index) //pass index in devicelist.h
+            //deviceListModel.removeDevice(index) //pass index in devicelist.h
             console.log(command)
         }
+
     }
 
 
@@ -63,6 +66,7 @@ Item {
 
         MouseArea {
             anchors.fill: parent
+            hoverEnabled: true
 
             onClicked: {
                 if (!model.selected) {
@@ -72,6 +76,9 @@ Item {
                     console.log(command)
                 }
             }
+            //display info of tenperature if hovered
+            onEntered: { tempInfoLable.text = "-10 0 20 30" }
+            onExited: { tempInfoLable.text = "20.0 °C | [4]" }
         }
 
         GridLayout {
@@ -84,6 +91,7 @@ Item {
                 Layout.fillWidth: true
                 id: deviceName
                 text: model.deviceName
+                color: index === deviceListModel.selectedIndex ? "orangered" : "dark"
                 font.pixelSize: sm.mFont
             }
 
@@ -110,18 +118,33 @@ Item {
                 }
 
                 IconLabel {
-                    id: isChosed
-                    visible: index === deviceListModel.selectedIndex
-                    icon.source: "qrc:/icons/check-square.svg"
-                }
-                IconLabel {
                     id: isConnected
                     visible: index === deviceListModel.selectedIndex
                     icon.source: "qrc:/icons/hdd-network.svg"
                 }
+
+                Text {
+                    id: tempInfoLable
+                    visible: switchInfo
+                    text: "20.0 °C | [4]"
+                    clip: true
+                    font.pixelSize: sm.sFont
+                }
+
             }
+
+
         }
-    } 
+    }
+
+    Timer {
+        interval: 5000
+        repeat: true
+        running: false
+        onTriggered: {
+            switchInfo = !switchInfo
+        }
+    }
 }
 
 /*##^##
