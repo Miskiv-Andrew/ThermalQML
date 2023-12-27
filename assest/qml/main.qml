@@ -25,7 +25,7 @@ ApplicationWindow  {
     Material.accent: Material.DeepOrange
 
     menuBar: MenuBar {
-
+        id: menu
         font.pointSize: sm.sFont
 
         Menu {
@@ -103,6 +103,14 @@ ApplicationWindow  {
             var filePath = selectedFile.toString().replace("file:///",'')
             console.log("You chose: " + filePath)
         }
+    }
+
+    SceUser {
+        x: menu.width - width
+        y: menu.y
+        height: menu.height
+        width: menu.height
+        z: 10
     }
 
     WinHeater{

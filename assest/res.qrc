@@ -2035,5 +2035,7 @@
         <file>Fonts/JetBrainsMono/JetBrainsMono-Regular.ttf</file>
         <file>qml/styles/Settings.qml</file>
         <file>qml/styles/ColorTheme.qml</file>
+        <file>qml/modules/SceUser.qml</file>
+        <file>icons/defaultLogo.png</file>
     </qresource>
 </RCC>
