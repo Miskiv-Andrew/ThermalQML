@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
 import Qt.labs.qmlmodels 1.0
 import QtQuick.Layouts
+import QtQuick.Shapes
 
 Item {
     visible: true

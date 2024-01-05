@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv); //Here etc..
-    app.setWindowIcon(QIcon(":/icons/win-icon.png"));
+    app.setWindowIcon(QIcon(":/icons/additional/win-icon.png"));
 
     // Get programm path where it launched
     QString programPath = QCoreApplication::applicationDirPath();
