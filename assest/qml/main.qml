@@ -66,12 +66,23 @@ ApplicationWindow  {
             }
         }
         Menu {
+            title: qsTr("Робота")
+            font.pointSize: sm.sFont
+            Action { text: qsTr("Старт роботи системи")
+                onTriggered: {
+                    var command = ["start_work_system"]
+                    dsContext.receive_data_from_QML(command)
+                    console.log(command) }
+            }
+        }
+        Menu {
             title: qsTr("&Управління")
             font.pointSize: sm.sFont
             Action { text: qsTr("Пічка")
                 onTriggered: { manualHeater.show() }
             }
         }
+
     }
 
     FileDialog {
@@ -118,6 +129,10 @@ ApplicationWindow  {
         id: manualHeater
         Material.accent: Material.DeepOrange
         visible: false;
+    }
+
+    WinLogin{
+        visible: true
     }
 
     ColorTheme{

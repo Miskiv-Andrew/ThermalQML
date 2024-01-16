@@ -12,6 +12,9 @@ Page {
 
         Connections { target: smContext }
 
+        Connections { target: dsContext }
+
+
         MessageDialog {
             id: popupApply
             text: " "
@@ -45,56 +48,77 @@ Page {
                     ScrollView {
                         Layout.fillHeight: true
                         Layout.preferredWidth: 200
-
-                        Column {
+                        Rectangle {
                             anchors.fill: parent
-                            spacing: 5
+                            color: "#fafafa"
+                            radius: 10
+                            z: 10
 
-                            Button {
-                                text: "Інтерфейс"
-                                display: AbstractButton.TextBesideIcon
-                                icon.source: "qrc:/icons/display.svg"
-                                font.pixelSize: sm.mFont;
-                                width: parent.width
-                                checkable: true
-                                autoExclusive: true
-                                flat: true
-                            }
+                            Column {
+                                anchors.fill: parent
+                                spacing: 5
 
-                            Button {
-                                text: "Telegram bot"
-                                display: AbstractButton.TextBesideIcon
-                                icon.source: "qrc:/icons/telegram.svg"
-                                font.pixelSize: sm.mFont;
-                                width: parent.width
-                                checkable: true
-                                autoExclusive: true
-                                flat: true
-                            }
-
-                            Rectangle {
-                                color: "#40000000"
-                                radius: 10
-                                height: 2
-                                width: parent.width
-                            }
-
-                            Item { Layout.fillHeight: true }
-
-                            Button {
-                                text: "Зберегти"
-                                display: AbstractButton.TextBesideIcon
-                                icon.source: "qrc:/icons/save.svg"
-                                font.pixelSize: sm.mFont;
-                                width: parent.width
-                                flat: true
-                                onClicked: {
-                                    smContext.writeSettingsToFile()
-                                    popupApply.open()
+                                Button {
+                                    text: "Інтерфейс"
+                                    display: AbstractButton.TextBesideIcon
+                                    icon.source: "qrc:/icons/display.svg"
+                                    font.pixelSize: sm.mFont;
+                                    width: parent.width
+                                    checkable: true
+                                    autoExclusive: true
+                                    flat: true
+                                    onClicked: { viewSett.setCurrentIndex(0); }
                                 }
+
+                                Button {
+                                    text: "Програма"
+                                    display: AbstractButton.TextBesideIcon
+                                    icon.source: "qrc:/icons/cpu.svg"
+                                    font.pixelSize: sm.mFont;
+                                    width: parent.width
+                                    checkable: true
+                                    autoExclusive: true
+                                    flat: true
+                                    onClicked: { viewSett.setCurrentIndex(1); }
+                                }
+
+                                Button {
+                                    text: "Telegram bot"
+                                    display: AbstractButton.TextBesideIcon
+                                    icon.source: "qrc:/icons/telegram.svg"
+                                    font.pixelSize: sm.mFont;
+                                    width: parent.width
+                                    checkable: true
+                                    autoExclusive: true
+                                    flat: true
+                                }
+
+                                Rectangle {
+                                    color: "#40000000"
+                                    radius: 10
+                                    height: 2
+                                    width: parent.width
+                                }
+
+                                Item { Layout.fillHeight: true }
+
+                                Button {
+                                    text: "Зберегти"
+                                    display: AbstractButton.TextBesideIcon
+                                    icon.source: "qrc:/icons/save.svg"
+                                    font.pixelSize: sm.mFont;
+                                    width: parent.width
+                                    flat: true
+                                    onClicked: {
+                                        smContext.writeSettingsToFile()
+                                        popupApply.open()
+                                    }
+                                }
+
                             }
 
                         }
+
                     }
 
                     Rectangle {
@@ -104,8 +128,11 @@ Page {
                     }
 
                     SwipeView {
+                        id: viewSett
                         Layout.fillHeight: true
                         Layout.fillWidth: true
+                        z: -10
+
 
                         Item {
                             id: intefaceSett
@@ -126,7 +153,7 @@ Page {
                                     Rectangle {
                                         color: "#ffffff"
                                         width: intefaceSett.width-220 //220 - this is marging from colimn + margin from ScroolView
-                                        height: 300
+                                        height: 350
                                         radius: 10
                                         layer.enabled: true
                                         layer.effect: DropShadow {
@@ -205,6 +232,68 @@ Page {
 
                         }
 
+                        Item {
+                            id: programmSett
+
+                            ScrollView {
+                                anchors.fill: parent
+                                anchors.margins: 10
+
+                                Column {
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 100
+                                    anchors.rightMargin: 100
+                                    topPadding: 50
+                                    spacing: 10
+
+                                    Text { text: "Програма"; font.bold: true; font.pixelSize: sm.bFont; verticalAlignment: Text.AlignTop; }
+
+                                    Rectangle {
+                                        color: "#ffffff"
+                                        width: intefaceSett.width-220 //220 - this is marging from colimn + margin from ScroolView
+                                        height: 100
+                                        radius: 10
+                                        layer.enabled: true
+                                        layer.effect: DropShadow {
+                                            color: "#a3676767"
+                                            transparentBorder: true
+                                            horizontalOffset: 2
+                                            verticalOffset: 4
+                                            radius: 8
+                                        }
+
+
+                                        ColumnLayout {
+                                            anchors.fill: parent
+                                            anchors.margins: 10
+
+                                            RowLayout {
+                                                Layout.preferredHeight: 50
+                                                ColumnLayout {
+                                                    Text { text: "Режим роботи"; font.pixelSize: sm.mFont; Layout.fillWidth: true }
+                                                    Text { text: "Режим у якому програма буде працювати"; font.pixelSize: sm.sFont; Layout.fillWidth: true; color: "gray"}
+                                                }
+                                                ComboBox { textRole: "text"; valueRole: "value"; model: [ {value: "auto", text: "Автоматичний"}, {value: "semi", text: "Полуавтоматичний"}, {value: "handle", text: "Ручний"} ]; font.pixelSize: sm.mFont;
+                                                    Layout.fillWidth: true;
+                                                    onActivated: {
+                                                        var command = []
+                                                        command = ["mode", currentValue]
+                                                        smContext.setValue("Programm/mode", currentValue);
+                                                        dsContext.receive_data_from_QML(command)
+                                                        console.log(command)
+                                                    }
+                                                    Component.onCompleted: currentIndex = indexOfValue(smContext.getValue("Programm/mode"))
+                                                }
+                                            }
+                                            Rectangle { color: "#eaeaea"; height: 2; Layout.fillWidth: true }
+
+                                        }
+                                    }
+                                }
+
+                            }
+
+                        }
 
                     }
                 }

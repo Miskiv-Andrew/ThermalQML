@@ -141,7 +141,7 @@ inline void TelegramBot::onNetworkReply(QNetworkReply *reply)
     else
     {
         // Обработка ошибки сети
-        qDebug() << "Network error:" << reply->errorString();
+        //qDebug() << "Network error:" << reply->errorString();
     }
 
     reply->deleteLater();

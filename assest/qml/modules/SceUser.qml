@@ -7,9 +7,15 @@ Item {
 
     property bool isExpanded: false
     property bool isAddInfo: false
+    property bool isLogged: false
+    property string userName: "Unknown";
 
     width: 40
     height: 40
+
+    Connections {
+
+    }
 
     Rectangle {
         id: userAccount
@@ -25,11 +31,22 @@ Item {
             radius: 100
 
             IconImage {
+                visible: !isLogged      //if not logged show default icon
                 anchors.fill: parent
                 anchors.margins: 5
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
                 source: "qrc:/icons/person.svg"
+            }
+
+            Text {
+                visible: isLogged      //if logged show fisrst letter
+                anchors.fill: parent
+                anchors.margins: 5
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: sm.sFont
+                text: userName.charAt(0)
             }
 
             MouseArea {
@@ -60,7 +77,7 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: sm.sFont
-                text: "UserName"
+                text: userName
             }
 
 
@@ -73,6 +90,7 @@ Item {
                 clip: true
 
                 Image {
+
                     anchors.fill: parent
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
@@ -81,10 +99,9 @@ Item {
                     fillMode: Image.PreserveAspectCrop
                 }
 
+
+
             }
-
-
-
 
             Text {
                 Layout.alignment: Qt.AlignHCenter
