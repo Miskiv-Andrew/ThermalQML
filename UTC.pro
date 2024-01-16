@@ -1,4 +1,4 @@
-QT += quick charts
+QT += quick charts serialport
 
 SOURCES += \
     main.cpp
@@ -40,6 +40,8 @@ DISTFILES += \
 
 HEADERS += \
     backend/devicelist.h \
+    backend/devices.h \
     backend/dispatcher.h \
     backend/heater.h \
-    backend/settings.h
+    backend/settings.h \
+    backend/telegrambot.h
