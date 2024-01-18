@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QUrlQuery>
 #include <QTimer>
+#include <QFile>
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -21,11 +22,14 @@ class TelegramBot : public QObject
 public:
     //poling
     explicit TelegramBot(const QString& token, int interval,  QObject *parent = nullptr);
+    explicit TelegramBot(QObject *parent = nullptr); //constructor with default params
 
 
 public slots:
 
     void sendMessage(const QString& chatId, const QString& text);
+
+    void sendGroupMessage(const QString& text);
 	
     void processMessage(const QString& chatId, const QString& text);
 	
@@ -39,16 +43,18 @@ private:
 
     void processUpdates(const QJsonArray &updates);
 
+    QString programPath;
+
     QString botToken;
 	
     QString webhookUrl;
 	
     QString botName = "@ThermalCalibrationBot";
 
-    QString lastUpdateId;  // Последний идентификатор обновления
+    QString lastUpdateId;
 
     QTimer pollTimer;
-    int pollingInterval;  // Added variable for polling interval in milliseconds
+    int pollingInterval;
 
     QNetworkAccessManager networkManager;
 
@@ -57,13 +63,40 @@ private:
 
 inline TelegramBot::TelegramBot(const QString &token, int interval, QObject *parent)
     : QObject(parent), botToken(token), pollingInterval(interval)
-{
+{    
+    programPath = QCoreApplication::applicationDirPath();
+
     connect(&networkManager, &QNetworkAccessManager::finished, this, &TelegramBot::onNetworkReply);
 
     // Set up timer for regular polling
     connect(&pollTimer, &QTimer::timeout, this, &TelegramBot::startListening);
-	
+
     pollTimer.start(pollingInterval);
+}
+
+inline TelegramBot::TelegramBot(QObject *parent)
+{
+    //this constructor search token if telegram folder where app placed
+    programPath = QCoreApplication::applicationDirPath();
+    QFile tokenFile(programPath + "/telegram/token.txt");
+    QString tokenFromFile;
+
+    if (tokenFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&tokenFile);
+        tokenFromFile = in.readAll();
+        tokenFile.close();
+
+        connect(&networkManager, &QNetworkAccessManager::finished, this, &TelegramBot::onNetworkReply);
+
+        botToken = tokenFromFile;
+        pollingInterval = 3000;
+
+        pollTimer.start(pollingInterval);
+    } else {
+        qDebug() << "Error of open file token.txt";
+    }
+
+
 }
 
 
@@ -79,21 +112,46 @@ inline void TelegramBot::sendMessage(const QString &chatId, const QString &text)
     query.addQueryItem("chat_id", chatId);
     query.addQueryItem("text", text);
 
-    // Выполнение POST-запроса
+    // POST requesr
     QNetworkReply* reply = networkManager.post(request, query.toString(QUrl::FullyEncoded).toUtf8());
 
-    // Обработка ответа
+    // Answer process
     connect(reply, &QNetworkReply::finished, this, [reply]() {
         if (reply->error() == QNetworkReply::NoError) {
-            qDebug() << "Сообщение успешно отправлено!";
+            qDebug() << "Message succsesfuly send!";
         } else {
-            qDebug() << "Ошибка при отправке сообщения:" << reply->errorString();
+            qDebug() << "Send message error:" << reply->errorString();
         }
 
-        // Очистка ресурсов
+        // Clear resources
         reply->deleteLater();
     });
 
+}
+
+inline void TelegramBot::sendGroupMessage(const QString &text)
+{
+    //send message to group of users, id stored in telegram folder in txt file
+    QFile groupListFile(programPath + "/telegram/groupList.txt");
+    QStringList groupList;
+
+    if (groupListFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&groupListFile);
+        while (!in.atEnd()) {
+            QString line = in.readLine().trimmed();
+            if (!line.isEmpty()) {
+                groupList.append(line);
+            }
+        }
+        groupListFile.close();
+    } else {
+        qDebug() << "Error of open file groupList.txt";
+        return;
+    }
+
+    for (const QString &chatId : groupList) {
+        sendMessage(chatId, text);
+    }
 }
 
 inline void TelegramBot::processMessage(const QString &chatId, const QString &text)
@@ -134,13 +192,11 @@ inline void TelegramBot::onNetworkReply(QNetworkReply *reply)
         }
         else
         {
-            // Обработка случая, когда "ok" равно false
             qDebug() << "Telegram API returned an error:" << rootObject.value("description").toString();
         }
     }
     else
     {
-        // Обработка ошибки сети
         //qDebug() << "Network error:" << reply->errorString();
     }
 
@@ -159,7 +215,7 @@ inline void TelegramBot::processUpdates(const QJsonArray &updates)
 
         processMessage(chatId, text);
 
-        // Обновляем последний идентификатор
+        // Update last update identificato
         QJsonValue updateIdValue = update.toObject().value("update_id");
         if (updateIdValue.isDouble())
         {
@@ -172,7 +228,7 @@ inline void TelegramBot::processUpdates(const QJsonArray &updates)
         }
     }
 
-    // Вызываем метод снова для следующего опроса
+    // If no timer enabled, call in cycle
     //startListening();
 }
 

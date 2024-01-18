@@ -10,9 +10,9 @@
 #include "telegrambot.h"
 
 #define ONE_HOUR 3600000
-#define TWO_HOUR 7200000	
+#define TWO_HOUR 7200000
 
-#define ChatID   "-4017261110"	
+
 
 
 class dispatcher : public QObject
@@ -257,11 +257,9 @@ inline dispatcher::dispatcher(QObject *parent)
     heat_thread->start();
 
 
-////////////////////////////// СОЗДАНИЕ TelegramBot bot////////////////////////////
+    ////////////////////////////// СОЗДАНИЕ TelegramBot bot////////////////////////////
 
-
-    bot = new TelegramBot("6890387893:AAEVJy2MAv6PWYos_IT9lmriljhx9kSEZkM", 3000);
-	
+    bot = new TelegramBot();
 
 /////////////////// СОЗДАНИЕ ОБЪЕКТОВ И КОННЕКТЫ dispatcher ////////////////////////////////
 
@@ -434,7 +432,7 @@ inline void dispatcher::receive_data_from_heater(int order, bool flag, double te
 						
 						QString str(" Цільову температуру " + QString::number(target_temp)    + " досягнуто");
 						
-						bot->sendMessage(ChatID, str);
+                        bot->sendGroupMessage(str);
 						
                         str.prepend("[INFO]");
 						
@@ -1109,7 +1107,7 @@ inline void dispatcher::contin_system_work() {
 		
 		emit qml_send_text(str);
 		
-		bot->sendMessage(ChatID, str);
+        bot->sendGroupMessage(str);
 		
 		return;
 		
@@ -1145,7 +1143,7 @@ inline void dispatcher::contin_system_work() {
 		
 	//emit qml_send_text(str);
 		
-	bot->sendMessage(ChatID, str);
+    bot->sendGroupMessage(str);
 	
 	
 	// send to Telegramm   ?????????????????????????????????????????????????
