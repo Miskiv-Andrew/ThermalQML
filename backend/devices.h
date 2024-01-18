@@ -44,9 +44,14 @@ public:
 	
 	*/
 
-	// Конструктор поиска девайсов
+//	// Конструктор поиска девайсов
+//    InfoDev( int _type, QString _port, QString _name, QString _ser_num) {
+//        set_min_params(_type, _port, _name, _ser_num, QList<QVariantList>());
+//    }
+
+    // Конструктор поиска девайсов
     InfoDev( int _type, QString _port, QString _name, QString _ser_num) {
-        set_min_params(_type, _port, _name, _ser_num, QList<QVariantList>());
+        set_min_params(_type, _port, _name, _ser_num);
     }
 
 
@@ -87,14 +92,25 @@ public:
         path.clear();
     }
 
-    void set_min_params(int _type, QString _port, QString _name, QString _ser_num, QList<QVariantList>) {
+//    void set_min_params(int _type, QString _port, QString _name, QString _ser_num, QList<QVariantList>) {
+//        type      = _type;
+//        port      = _port;
+//        name      = _name;
+//        ser_num   = _ser_num;
+//        data_list.clear();
+//		temp_list.clear();
+//		path.clear();
+//    }
+
+
+    void set_min_params(int _type, QString _port, QString _name, QString _ser_num) {
         type      = _type;
         port      = _port;
         name      = _name;
         ser_num   = _ser_num;
-        data_list.clear();		
-		temp_list.clear();
-		path.clear();
+        data_list.clear();
+        temp_list.clear();
+        path.clear();
     }
 	
 	void set_max_params(int _type, QString _port, QString _name, QString _ser_num,
@@ -247,7 +263,7 @@ public:
     Work_Mode get_work_mode();
 	
 	
-    enum Temp_Control_Mode{ ON_DEVt, GET_TEMP, SWITCH_DEVt };
+    enum Temp_Control_Mode{ ON_DEV_T, GET_TEMP, SWITCH_DEV_T };
 	/*
 		ON_DEV        - включение девайса	
 		GET_TEMP      - получение температуры	
@@ -271,7 +287,7 @@ public:
     Control_Mode get_control_mode();
 	
 	
-    enum Req_Mode { ON_DEVr, SER_NUM, OFF_DEV, SWITCH_DEVr };
+    enum Req_Mode { ON_DEV_R, SER_NUM, OFF_DEV, SWITCH_DEV_R };
     /*
 		ON_DEV       - режим включения прибора	
 		SER_NUM      - режим получения сер.номера прибора		
@@ -901,7 +917,7 @@ inline void Devices::switch_dev_ident()
 {
     ser_port->clear();
     close_port();
-    set_request_mode(SWITCH_DEVr);
+    set_request_mode(SWITCH_DEV_R);
     ident_timer->start(ID_TIMER_PAUSE);
 }
 
@@ -1001,7 +1017,7 @@ inline void Devices::ident_type_dev(QVariantList list)
 
             // Включаем девайс
             if(send_data(rec_on_dev.at(st_type))) {   // Данные записаны в порт
-                set_request_mode(ON_DEVr);             // Режим включения девайса
+                set_request_mode(ON_DEV_R);             // Режим включения девайса
                 port_name = port_list.at(st_posit);   // Фиксируем имя порта
                 global_type = st_type;                // Фиксируем тип девайса
                 ident_timer->start(ID_TIMER_PAUSE);
@@ -1087,7 +1103,7 @@ inline void Devices::ident_type_dev(QVariantList list)
 
             // Включаем девайс
             if(send_data(rec_on_dev.at(st_type))) {   // Данные записаны в порт
-                set_request_mode(ON_DEVr);                   // Режим включения девайса
+                set_request_mode(ON_DEV_R);                   // Режим включения девайса
                 port_name = port_list.at(st_posit);   // Фиксируем имя порта
                 global_type = st_type;                // Фиксируем тип девайса
                 ident_timer->start(ID_TIMER_PAUSE);
@@ -1123,7 +1139,7 @@ inline void Devices::ident_type_dev(QVariantList list)
             if(open_port(port_name, st_type)) { 
 			
                 if(send_data(rec_on_dev.at(st_type))) { // Данные записаны в порт
-                    set_request_mode(ON_DEVr);
+                    set_request_mode(ON_DEV_R);
                     global_type = st_type;
                     ident_timer->start(ID_TIMER_PAUSE);
                     return;
@@ -1195,8 +1211,11 @@ inline void Devices::ident_type_dev(QVariantList list)
             QPair<int, QString> info_pair(get_dev_info(_ID));
             QList<QVariantList> list;
             list.clear();
-            info_dev.set_min_params(info_pair.first, port_name, info_pair.second, st_ser_num, list);
+
+            info_dev.set_min_params(info_pair.first, port_name, info_pair.second, st_ser_num);
+
             start_queue_dev_list.append(info_dev);
+
             info_dev.clear();
 
             ++st_posit;
@@ -1259,7 +1278,7 @@ inline void Devices::proc_ident_timer()
     QVariantList data_list;
     data_list.clear();
 
-    if(local_mode == SWITCH_DEVr) {            // Отправляем пакет перехода на Label
+    if(local_mode == SWITCH_DEV_R) {            // Отправляем пакет перехода на Label
         data_list << 1 << 1;
         emit s_ident_type_dev(data_list);
         return;
@@ -1295,7 +1314,7 @@ inline void Devices::proc_ident_timer()
 
 //////////////////////////////////////////////////////////////////
 
-    if(local_mode == ON_DEVr) { // Девайс включился
+    if(local_mode == ON_DEV_R) { // Девайс включился
         if(rec_buff.size() >= 7){  // Корректный пакет    // QVariant (true, 1, int ID)
             int ID = static_cast<int>(rec_buff.at(5));
             data_list << true << 1 << ID << 0;
@@ -1563,15 +1582,12 @@ inline void Devices::reconnect_proc() {
 		return;
 	} 
 	
-	
-	for( i = 0; i < start_queue_dev_list.size(); ++i) {	 
+    for( i = 0; i < start_queue_dev_list.size(); ++i) {
 		start_ser_num  = start_queue_dev_list.at(i).get_ser_num(); // новый серийный номер
 		start_com_port = start_queue_dev_list.at(i).get_port();    //новый COM порт	
 		for(j = 0; j < work_queue_dev_list.size(); ++j) {		
-			if(work_queue_dev_list.at(j).get_ser_num() == start_ser_num) {
-                // Совпали сер.номера - присваиваем новое значение COM порта
-                InfoDev& dev = work_queue_dev_list[j];
-                dev.set_port(start_com_port);
+			if(work_queue_dev_list.at(j).get_ser_num() == start_ser_num) {    
+                work_queue_dev_list[j].set_port(start_com_port);
 				break;
 			}		
 		}	 
@@ -1716,10 +1732,9 @@ inline void Devices::create_new_session_files() {
 			
 		}
 		
-		else {  		
-            //start_queue_dev_list.at(i).set_path(help_str);
-            InfoDev& dev = start_queue_dev_list[i];
-            dev.set_path(help_str);
+        else {
+            start_queue_dev_list[i].set_path(help_str);
+
 			// Копируем данные в рабочий список work_queue_dev_list 
 			work_queue_dev_list.append(start_queue_dev_list.at(i));
 			
@@ -1797,7 +1812,9 @@ inline bool Devices::add_data_to_file(QString path, QString &data) {
 			else 
 				return false; // Проблемы
 		}		
-	}	
+    }
+
+    return false; // Файла не существует
 }
 
 inline QString Devices::get_adjuster_name() {
@@ -1947,7 +1964,7 @@ inline void Devices::switch_dev_temp_control(){
 		ser_port->clear();	
 		close_port();
 	}	
-    set_temp_control_mode(SWITCH_DEVt);
+    set_temp_control_mode(SWITCH_DEV_T);
     temp_control_timer->start(ID_TIMER_PAUSE);	
 }
 
@@ -1982,7 +1999,7 @@ inline void Devices::proc_temp_control_timer() {
 
     Temp_Control_Mode local_mode  = get_temp_control_mode();
 
-    if(local_mode == SWITCH_DEVt) {            // Выбор следующего девайса
+    if(local_mode == SWITCH_DEV_T) {            // Выбор следующего девайса
 		emit s_temp_control(QVariantList());  
         return;
     }
@@ -2008,7 +2025,7 @@ inline void Devices::proc_temp_control_timer() {
         return;
     }
 	
-    if(local_mode == ON_DEVt) { // Девайс включился
+    if(local_mode == ON_DEV_T) { // Девайс включился
 	
         if(rec_buff.size() >= 7){  // Корректный пакет    // QVariant (true, 1, int ID)
 			
@@ -2086,7 +2103,7 @@ inline void Devices::temp_control(QVariantList list) {
 				ser_port->clear();	
 				close_port();
 			}	
-            set_temp_control_mode(SWITCH_DEVt);
+            set_temp_control_mode(SWITCH_DEV_T);
 			temp_control_timer->start(120000);	// 2 мин
 			
 			emit s_send_temp_list(temp_dev_list);
@@ -2105,7 +2122,7 @@ inline void Devices::temp_control(QVariantList list) {
             // Включаем девайс
             if(send_data(rec_on_dev.at(st_type))) {   // Данные записаны в порт
 			
-                set_temp_control_mode(ON_DEVt);        // Режим включения девайса
+                set_temp_control_mode(ON_DEV_T);        // Режим включения девайса
 				
                 temp_control_timer->start(ID_TIMER_PAUSE);
 				
@@ -2176,7 +2193,7 @@ inline void Devices::temp_control(QVariantList list) {
 					выключение девайса
 				*/
 				temp_dev_list.append(temp);     // Записываем реальную температуру девайса
-                set_temp_control_mode(SWITCH_DEVt);
+                set_temp_control_mode(SWITCH_DEV_T);
                 temp_control_timer->start(ID_TIMER_PAUSE);
                 return;
             }

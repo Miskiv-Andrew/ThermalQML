@@ -187,7 +187,7 @@ signals:
 	void qml_send_text(QString);
 	
 	// Сигнал подсветки нужной целевой температуры в таблице температур QML
-	void qml_light_turget_temp(int);
+    void qml_light_target_temp(int);
 
 	// Сигнал отправки массива данных в QML
 	void qml_send_array(QVariantList); 
@@ -365,7 +365,9 @@ inline void dispatcher::receive_data_from_heater(int order, bool flag, double te
 	
 		/*
 			Выполнить необходимые системные действия с учетом 
-			некорректной работы печки		
+            некорректной работы печки
+
+            Остановить таймер запросов к печке ????????????????????????????????????????????????????????????????????????????
 		*/
 
 		switch (order) {
@@ -625,7 +627,7 @@ inline void dispatcher::receive_data_from_QML(QVariantList list) {
 		if(str == "target_temp") {		
 
 			bool flag;
-            double d_temp(list.at(1).toDouble());
+            double d_temp(list.at(1).toDouble(&flag));
 			
 			if(flag && etal_list.contains(d_temp)) {	
 			
@@ -819,9 +821,10 @@ inline void dispatcher::receive_data_from_QML(QVariantList list) {
 						
 			for(int i = 1; i < list.size(); ++i) {	
 			
-                value = list.at(i).toString().toDouble();
+                value = list.at(i).toString().toDouble(&test);
 				
 				if(!test || !etal_list.contains(value)) {
+                    unfinished_temp_list.clear();// При ошибке очищаем стартовый список температур
 					QString info("[INFO] Некоректний формат даних температури");
 					emit qml_send_text(info);
 					return;
@@ -1078,7 +1081,7 @@ inline QPair<bool, double>  dispatcher::target_temp_selection() {
 	emit trans_order_to_devices(list);
 	
 	// отправляем сигнал в QML с новым значением позиции температуры 	
-	emit qml_light_turget_temp(target_temp_posit);
+    emit qml_light_target_temp(target_temp_posit);
 	++target_temp_posit;	
 	
 	// Перезаписываем температуру из unfinished_temp_list в finished_temp_list 
@@ -1124,7 +1127,7 @@ inline void dispatcher::contin_system_work() {
 	emit trans_order_to_devices(list);
 	
 	// отправляем сигнал в QML с новым значением позиции температуры 	
-	emit qml_light_turget_temp(target_temp_posit);
+    emit qml_light_target_temp(target_temp_posit);
 	++target_temp_posit;	
 	
 	// Перезаписываем температуру из unfinished_temp_list в finished_temp_list 
@@ -1143,10 +1146,7 @@ inline void dispatcher::contin_system_work() {
 		
 	//emit qml_send_text(str);
 		
-    bot->sendGroupMessage(str);
-	
-	
-	// send to Telegramm   ?????????????????????????????????????????????????
+    bot->sendGroupMessage(str); // send to Telegramm
 	
 }
 
