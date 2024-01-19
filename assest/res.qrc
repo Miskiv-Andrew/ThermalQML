@@ -1963,7 +1963,6 @@
         <file>qml/windows/WinHeater.qml</file>
         <file>qml/modules/SceSlider.qml</file>
         <file>qml/modules/SceSpitter.qml</file>
-        <file>icons/win-icon.png</file>
         <file>Fonts/Galant/Gallant black-italic.otf</file>
         <file>Fonts/Galant/Gallant black.otf</file>
         <file>Fonts/Galant/Gallant bold-italic.otf</file>
@@ -2035,5 +2034,9 @@
         <file>Fonts/JetBrainsMono/JetBrainsMono-Regular.ttf</file>
         <file>qml/styles/Settings.qml</file>
         <file>qml/styles/ColorTheme.qml</file>
+        <file>qml/modules/SceUser.qml</file>
+        <file>icons/additional/hex.png</file>
+        <file>icons/additional/defaultLogo.png</file>
+        <file>icons/additional/win-icon.png</file>
     </qresource>
 </RCC>

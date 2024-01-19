@@ -37,7 +37,7 @@ Window {
 
             Rectangle {
                 Layout.fillHeight: true
-                Layout.preferredWidth: 400
+                Layout.preferredWidth: 200
                 id: contentList
                 color: "white"
                 radius: 10
@@ -55,88 +55,41 @@ Window {
                     anchors.margins: 20
                     spacing: 20
 
-                    TextArea {
+                    Text {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 50
-                        id: tempListInput
-                        placeholderText: qsTr("Внести список цілових температур")
-
-                        Keys.onReturnPressed: {
-                            var command = []
-
-                            var inputText = tempListInput.text;
-                            inputText = inputText.replace(",", ".");
-                            var temperatureArray = inputText.split(/\s+|\//);
-
-                            command = ["target_temp_list"].concat(temperatureArray);
-                            dsContext.receive_data_from_QML(command)
-
-                            tempList.model.clear();
-                            for (var i = 0; i < temperatureArray.length; ++i) {
-                                tempList.model.append({ temperature: temperatureArray[i] });
-                            }
-
-                            console.log(command);
-                        }
+                        text: "Список температур"
+                        verticalAlignment: Qt.AlignVCenter
+                        horizontalAlignment: Qt.AlignHCenter
+                        font.pixelSize: sm.mFont
                     }
+
 
                     ListView {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         id: tempList
+                        spacing: 10
 
-                        model: ListModel {
-                            ListElement { temperature: "Список температур" }
-                        }
+                        model: dsContext.unfinishedTempList
 
                         delegate: Item {
                             width: tempList.width
                             height: 60
 
-                            Menu {
-                                id: actionMenu
-                                x: actionBtn.x + actionBtn.width
-                                y: actionBtn.y + actionBtn.height
-
-                                font.pointSize: sm.sFont
-
-                                MenuItem {
-                                    text: qsTr("Видалити")
-                                    onTriggered: { }
-                                }
-
-                            }
-
                             Rectangle {
                                 id: background
                                 radius: 10
                                 anchors.fill: parent
-                                color: index % 2 == 0 ? "#00000000" : "#e6e6e6"
+                                color: index % 2 == 0 ? "#f6f6f6" : "#e6e6e6"
 
-                                GridLayout {
+                                Text {
                                     anchors.fill: parent
-                                    anchors.margins: 5
-                                    columns: 2
-                                    rows: 1
-
-                                    Text {
-                                        Layout.fillWidth: true
-                                        id: tempItemText
-                                        text: model.temperature
-                                        verticalAlignment: Qt.AlignVCenter
-                                        horizontalAlignment: Qt.AlignHCenter
-                                        font.pixelSize: sm.mFont
-                                    }
-
-                                    Button {
-                                        id: actionBtn
-                                        display: AbstractButton.TextBesideIcon
-                                        icon.source: "qrc:/icons/dash.svg"
-                                        onClicked: actionMenu.open()
-                                        flat: true
-                                    }
-
-
+                                    id: tempItemText
+                                    text: modelData
+                                    color: dsContext.currentTargetTemp === modelData ? "#ff5722" : "black"
+                                    verticalAlignment: Qt.AlignVCenter
+                                    horizontalAlignment: Qt.AlignHCenter
+                                    font.pixelSize: sm.mFont
                                 }
                             }
                         }
@@ -168,7 +121,7 @@ Window {
 
                     Rectangle {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 120
+                        Layout.preferredHeight: 180
                         id: rectangleControl
                         color: "#00000000"
 
@@ -177,7 +130,7 @@ Window {
                             anchors.margins: 20
 
                             columns: 2
-                            rows: 2
+                            rows: 3
 
                             Switch {
                                 Layout.fillHeight: true
@@ -268,6 +221,26 @@ Window {
 
                                     }
 
+                                }
+
+                                TextArea {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 50
+                                    id: tempListInput
+                                    placeholderText: qsTr("Внести список цілових температур")
+
+                                    Keys.onReturnPressed: {
+                                        var command = []
+
+                                        var inputText = tempListInput.text;
+                                        inputText = inputText.replace(",", ".");
+                                        var temperatureArray = inputText.split(/\s+|\//);
+
+                                        command = ["target_temp_list"].concat(temperatureArray);
+                                        dsContext.receive_data_from_QML(command)
+
+                                        console.log(command);
+                                    }
                                 }
 
                             }

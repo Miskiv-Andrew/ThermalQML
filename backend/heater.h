@@ -194,8 +194,8 @@ inline void heater::receive_dispatcher_order(int order, double temp)
         dispatcher_order = order;
 
         if(dispatcher_order == 5) {  // Connect
-            heater_socket->connectToHost("169.254.50.136", 2049);  //origin
-//            heater_socket->connectToHost("192.168.17.104", 2049);
+            //heater_socket->connectToHost("169.254.50.136", 2049);     //origin
+            heater_socket->connectToHost("192.168.10.102", 2049);       //dedicaded ip for heater
             return;
         }
 

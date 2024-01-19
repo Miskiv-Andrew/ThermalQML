@@ -1,3 +1,67 @@
+//hexagon grid
+
+Canvas {
+	anchors.fill: parent
+	z: 10
+	property int hexSize: 20
+	property int colNum: parent.width / hexSize;
+	property int rowNum: parent.height / hexSize;
+
+	onPaint: {
+		var ctx = getContext("2d");
+
+		// Очищаем canvas
+		ctx.clearRect(0, 0, width, height);
+
+		// Определяем размеры сетки
+		var hexWidth = Math.sqrt(3) * hexSize;
+		var hexHeight = 2 * hexSize;
+
+		// Определяем смещение для четных и нечетных рядов
+		var yOffset = hexHeight * 1;
+
+		// Устанавливаем ширину линии
+		ctx.lineWidth = 2;
+
+		// Добавляем эффект тени
+		ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+		ctx.shadowBlur = 1;
+		ctx.shadowOffsetX = 2;
+		ctx.shadowOffsetY = 2;
+
+		// Рисуем hex-сетку
+		for (var col = 0; col < colNum; col++) {
+			for (var row = 0; row < rowNum; row++) {
+				var x = col * hexWidth * 1;
+				var y = row * yOffset * 1;
+
+				// Сдвигаем нечетные ряды
+				if (col % 2 === 1) {
+					y += yOffset / 2;
+				}
+
+				drawHexagon(ctx, x, y, hexSize);
+			}
+		}
+	}
+
+	function drawHexagon(ctx, x, y, size) {
+		ctx.beginPath();
+		for (var i = 0; i < 6; i++) {
+			var angle = i * (2 * Math.PI / 6);
+			var hexX = x + size * Math.cos(angle);
+			var hexY = y + size * Math.sin(angle);
+			if (i === 0) {
+				ctx.moveTo(hexX, hexY);
+			} else {
+				ctx.lineTo(hexX, hexY);
+			}
+		}
+		ctx.closePath();
+		ctx.stroke();
+	}
+}
+
 //---Item Loading by loader
 
 Item {
@@ -456,3 +520,5 @@ LinearGradient {
                 }
             }
         }
+		
+		

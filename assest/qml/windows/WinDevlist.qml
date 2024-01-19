@@ -29,6 +29,8 @@ Item {
 
             }
 
+            model: deviceListModel
+            /*
             model: ListModel {
                 ListElement {
                     deviceNameStr: "Spectra №19000031"
@@ -50,6 +52,8 @@ Item {
                     comPortNameStr: "COM4"
                 }
             }
+            */
+
         }
     }
 }

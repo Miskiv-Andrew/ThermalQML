@@ -8,6 +8,12 @@ Window {
     height:300
     width: 250
 
+    signal userLoggedIn(string username)
+
+    Connections {
+        target: dsContext
+    }
+
     ColumnLayout {
         Material.accent: Material.DeepOrange
         anchors.fill: parent
@@ -25,11 +31,13 @@ Window {
         Item { }
 
         TextArea  {
+            id: login
             Layout.fillWidth: true
             placeholderText: "Логін або ID"
         }
 
         TextArea  {
+            id: pass
             Layout.fillWidth: true
             placeholderText: "Пароль"
         }
@@ -40,6 +48,14 @@ Window {
             Layout.fillWidth: true
             Material.background: Material.DeepOrange
             text: "Вхід"
+
+            onClicked: {
+                var command = []
+                command = ["connect_heater", login.text]
+                dsContext.receive_data_from_QML(command)
+                windowLogin.userLoggedIn(login.text);
+                console.log(command)
+            }
         }
 
     }
