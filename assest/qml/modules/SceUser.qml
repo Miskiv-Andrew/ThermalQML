@@ -27,7 +27,7 @@ Item {
         Rectangle {
             anchors.fill: parent
             anchors.margins: 5
-            color: "darkOrange"
+            color: "#ff5722"
             radius: 100
 
             IconImage {

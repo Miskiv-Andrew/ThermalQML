@@ -23,6 +23,9 @@ public:
 
 	// Свойство temp - текущая температура печки curr_temp
     Q_PROPERTY(double temp READ get_curr_temp WRITE set_curr_temp NOTIFY change_curr_temp)
+    // [SCE] Список целевых температу связывание напрямую с QML
+    Q_PROPERTY(QList<double> unfinishedTempList READ unfinishedTempList NOTIFY unfinishedTempListChanged)
+    Q_PROPERTY(double currentTargetTemp READ currentTargetTemp NOTIFY currentTargetTempChanged)
 	
 	explicit dispatcher(QObject *parent = nullptr);
 
@@ -53,7 +56,19 @@ public:
 	
 	
 	// Ф-ция возвращает следующую целевую температуру
-	QPair<bool, double> target_temp_selection(); 
+    QPair<bool, double> target_temp_selection();
+
+    /*          QML         */
+    // [SCE] Список целевых "неотработанных" температур (обновление)
+    QList<double> unfinishedTempList() const
+    {
+        return unfinished_temp_list;
+    }
+
+    double currentTargetTemp() const
+    {
+        return m_currentTargetTemp;
+    }
 
 public slots:
 
@@ -142,7 +157,7 @@ private:
 	
 	bool flag_change_temp {false};      // Флаг изменения целевой температуры 	
 	
-	QList<double> unfinished_temp_list;   // Список целевых "неотработанных" температур
+    QList<double> unfinished_temp_list;   // [SCE] Список целевых "неотработанных" температур
 	
 	QList<double> finished_temp_list;      // Список целевых "отработанных" температур
 
@@ -161,6 +176,9 @@ private:
 	int target_temp_posit{-1};
 
     TelegramBot *bot;
+
+    // [SCE] Темература которую подсвечиваем в списке
+    double m_currentTargetTemp;
 
 
 signals:
@@ -200,6 +218,11 @@ signals:
 	
 	// Сигнал вызова ф-ции выборки новой температуры и продолжения работы 
 	void s_contin_system_work();
+
+
+    // [SCE] Сигнал для обновления списка темрерату [SCE]
+    void unfinishedTempListChanged();
+    void currentTargetTempChanged();    // подсветка текущей температуы
 
 
 };
@@ -810,12 +833,13 @@ inline void dispatcher::receive_data_from_QML(QVariantList list) {
 	
 	
 	
-	// QList<double> unfinished_temp_list; // Список целевых "неотработанных" температур
+    // QList<double> unfinished_temp_list; // Список целевых "неотработанных" температур
 	else {
 		
 		if(str == "target_temp_list") {
 			
-			unfinished_temp_list.clear();// очистили стартовый список температур			
+            unfinished_temp_list.clear();// очистили стартовый список температур
+            unfinishedTempListChanged();
 			bool test;
 			double value;			
 						
@@ -825,12 +849,20 @@ inline void dispatcher::receive_data_from_QML(QVariantList list) {
 				
 				if(!test || !etal_list.contains(value)) {
                     unfinished_temp_list.clear();// При ошибке очищаем стартовый список температур
-					QString info("[INFO] Некоректний формат даних температури");
+                    unfinishedTempListChanged();
+                    QString info("[INFO] Некоректний формат даних температури.\nСписок доступних температур: ");
+
+                    // [SCE] Преобразование каждого элемента QList<double> в строку и добавление к info
+                    foreach (double temperature, etal_list) {
+                        info += QString::number(temperature) + " ";
+                    }
+
 					emit qml_send_text(info);
 					return;
 				}
 			
-				unfinished_temp_list.append(value);	
+                unfinished_temp_list.append(value);
+                unfinishedTempListChanged();
 			}				
 			
 			
@@ -839,7 +871,7 @@ inline void dispatcher::receive_data_from_QML(QVariantList list) {
 			str.clear();
             str.append("[INFO] Список отриманих цільових температур");
 						
-			for(int i = 0; i < unfinished_temp_list.size(); ++i) 				
+            for(int i = 0; i < unfinished_temp_list.size(); ++i)
                 str.append(" " + QString::number(unfinished_temp_list.at(i)));
 			
 			emit qml_send_text(str);			
@@ -1055,7 +1087,7 @@ inline QPair<bool, double>  dispatcher::target_temp_selection() {
 	/*
 	   1. Выбрать новую целевую температуру
 	       Если новая целевая температура существует:
-				- удалить выбранное значение из списка unfinished_temp_list
+                - удалить выбранное значение из списка unfinished_temp_list
 				- записать выбранное значение в список finished_temp_list
 				- вернуть пару с <true, new target_temp>
 		   Если все температуры отработаны:
@@ -1066,12 +1098,16 @@ inline QPair<bool, double>  dispatcher::target_temp_selection() {
 	bool flag = false;
 	double temp = -1.0;
 
-	if(unfinished_temp_list.isEmpty()) 
+    if(unfinished_temp_list.isEmpty())
 		return qMakePair(flag, temp);
 		
 	flag = true;
 	
-	temp = unfinished_temp_list.at(0);
+    temp = unfinished_temp_list.at(0);
+
+    // [SCE] Подсветка температуры в списке напрямую в QML
+    m_currentTargetTemp = temp;
+    emit currentTargetTempChanged();
 		
 	// Отправляем новую целевую температуру в Devices
 	QVariantList list;
@@ -1084,9 +1120,10 @@ inline QPair<bool, double>  dispatcher::target_temp_selection() {
     emit qml_light_target_temp(target_temp_posit);
 	++target_temp_posit;	
 	
-	// Перезаписываем температуру из unfinished_temp_list в finished_temp_list 
-	unfinished_temp_list.removeFirst();
-	finished_temp_list.append(temp);
+    // Перезаписываем температуру из unfinished_temp_list в finished_temp_list
+    unfinished_temp_list.removeFirst();
+    unfinishedTempListChanged(); // [SCE] обновляем список
+    finished_temp_list.append(temp);
 	return qMakePair(flag, temp);
 }
 
@@ -1096,7 +1133,7 @@ inline void dispatcher::contin_system_work() {
 	
 	request_heater_timer->stop();  // Остановили таймер запроса к печке	
 	
-	if(unfinished_temp_list.isEmpty()) {
+    if(unfinished_temp_list.isEmpty()) {
 		
 		/*
 			Все температуры отработаны
@@ -1130,8 +1167,8 @@ inline void dispatcher::contin_system_work() {
     emit qml_light_target_temp(target_temp_posit);
 	++target_temp_posit;	
 	
-	// Перезаписываем температуру из unfinished_temp_list в finished_temp_list 
-	unfinished_temp_list.removeFirst();
+    // Перезаписываем температуру из unfinished_temp_list в finished_temp_list
+    unfinished_temp_list.removeFirst();
 	finished_temp_list.append(temp);
 	
 	target_temp = temp;     // Присвоили новое значение целевой темп.
